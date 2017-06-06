@@ -1,0 +1,110 @@
+下面提供了类Stu的数据成员定义，和用于测试的main函数，参考如图的运行结果，完成类的定义，并用多文件形式组织程序
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+using namespace std;  
+class Stu  
+{  
+private:  
+    string name;    //学生姓名  
+    float chinese;  //语文成绩  
+    float math;     //数学成绩  
+    //接下去写  
+};  
+  
+  
+  
+int main()  
+{  
+    Stu s1,s2;  
+    s1.setStudent("Lin daiyu", 98, 96); //对象置初值  
+    s2.setStudent("Jia baoyu", 90, 88); //对象置初值  
+    s1.show();//打印信息  
+    s2.show();//打印信息  
+    s1.setName("xue baochai");//重新置p1对象的名字  
+    s1.show();  
+    cout<<"s1.Name: "<<s1.getName()<<endl;//打印对象的名字  
+    cout<<"s1.average: "<<s1.average()<<endl;//打印对象的成绩  
+    return 0;  
+}  
+
+[参考解答]
+stu.h
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#ifndef STUDENT_H_INCLUDED  
+#define STUDENT_H_INCLUDED  
+using namespace std;  //为了用string类型  
+#include <cstring>    //为了用string类型  
+class Stu  
+{  
+private:  
+    string name;    //学生姓名  
+    float chinese;  //语文成绩  
+    float math;     //数学成绩  
+public:  
+    float average();//计算平均成绩  
+    float sum();    //计算总分  
+    void show();    //打印信息  
+    void setStudent(string,float,float);//为对象置姓名、成绩  
+    void setName(string);   //为对象置姓名  
+    string getName();   //取得学生姓名  
+};  
+  
+#endif // STUDENT_H_INCLUDED  
+
+stu.cpp
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<cstring>  
+#include "stu.h"  
+using namespace std;  
+  
+float Stu::average()  
+{  
+    return (chinese+math)/2;   //平均成绩  
+}  
+float Stu::sum()  
+{  
+    return chinese+math;   //总分  
+}  
+void Stu::show()    //打印信息  
+{  
+    cout<<"Name:  "<<name<<endl;  
+    cout<<"Score:  "<<chinese<<'\t'<<math<<endl;  
+    cout<<"average:  "<<average()<<'\t'<<"Sum:   "<<sum()<<endl<<endl;  
+}  
+void Stu::setStudent(string sName, float fChinese, float fMath)  
+{  
+    name=sName; //置姓名  
+    chinese=fChinese;   //置语文成绩  
+    math=fMath;         //置数学成绩  
+}  
+  
+void Stu::setName(string sName)  
+{  
+    name=sName; //置姓名  
+}  
+  
+string Stu::getName()  
+{  
+    return name;   //返回姓名  
+}  
+
+main.cpp
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include"student.h"  
+using namespace std;  
+  
+int main()  
+{  
+    Stu s1,s2;  
+    s1.setStudent("Lin daiyu", 98, 96); //对象置初值  
+    s2.setStudent("Jia baoyu", 90, 88); //对象置初值  
+    s1.show();//打印信息  
+    s2.show();//打印信息  
+    s1.setName("xue baochai");//重新置p1对象的名字  
+    s1.show();  
+    cout<<"s1.Name: "<<s1.getName()<<endl;//打印对象的名字  
+    cout<<"s1.average: "<<s1.average()<<endl;//打印对象的成绩  
+    return 0;  
+}  

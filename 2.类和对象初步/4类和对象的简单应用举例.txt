@@ -1,0 +1,117 @@
+实例1：求出三角形的周长和面积
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+#include<cstdlib>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    void setABC(double x, double y, double z);//置三边的值，注意要能成三角形  
+    double perimeter();//计算三角形的周长  
+    double area();//计算并返回三角形的面积  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+int main()  
+{  
+    Triangle tri1;    //定义三角形类的一个实例（对象）  
+    double x, y, z;  
+    cin>>x>>y>>z;  
+    tri1.setABC(x, y, z);    //为三边置初值  
+    cout<<"三角形的周长为："<< tri1.perimeter()<<"，面积为："<< tri1.area()<<endl;  
+    return 0;  
+}  
+  
+//在下面定义Triangle类中的各个成员函数  
+void Triangle::setABC(double x, double y, double z)  
+{  
+    if(x+y>z&&x+z>y&&y+z>x)  
+    {  
+        a=x;  
+        b=y;  
+        c=z;  
+    }  
+    else  
+    {  
+        cout<<"不能构成三角形"<<endl;  
+        exit(0);  
+    }  
+}  
+  
+  
+double Triangle::perimeter()  
+{  
+    return a+b+c;  
+}  
+  
+double Triangle::area()  
+{  
+    double p=(a+b+c)/2;  
+    return sqrt(p*(p-a)*(p-b)*(p-c));  
+}  
+
+
+实例2：学生信息及成绩处理
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<cstring>  
+using namespace std;  
+class Stu  
+{  
+private:  
+    int no; //学生学号  
+    char name[20];    //学生姓名  
+    double score[3];  //课程成绩  
+public:  
+    double average( );//计算平均成绩  
+    double sum( );    //计算总分  
+    void show( );    //打印信息  
+    void setStudent(int, char*);//输入学生学号、姓名  
+    void inputScore();  
+};  
+double Stu::average( )  
+{  
+    return sum()/3;  
+}//平均成绩  
+  
+  
+double Stu::sum( )  
+{  
+    return score[0]+score[1]+score[2];  
+}        //总分  
+void Stu::show( )    //打印信息  
+{    cout<<"No.: "<<no<<", Name: "<<name<<endl;  
+    cout<<"Score: "<<score[0]<<", "<<score[1]<<", "<<score[2]<<endl;  
+    cout<<"average: "<<average()<<'\t'<<"Sum: "<<sum()<<endl<<endl;  
+}  
+void Stu::setStudent(int n, char *nam)  
+{  
+    no = n;  //置学号  
+    strcpy(name,nam);    //置姓名  
+}  
+  
+  
+void Stu::inputScore()  
+{  
+    int i;  
+    cout<<"please input score of "<<name<<": ";  
+    for(i=0;i<3;i++)  
+        cin>>score[i];  
+}  
+  
+  
+int main( )  
+{  
+    Stu s1,*p2;  
+    s1.setStudent(30, "Li qing");  
+    s1.inputScore();  
+    s1.show();  
+  
+  
+    p2 = new Stu;  
+    p2->setStudent(28, "Wang Gang"); //对象置初值  
+    p2->inputScore();  
+    p2->show();  
+    return 0;  
+}  

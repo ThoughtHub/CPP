@@ -1,0 +1,58 @@
+【项目3-用对象数组操作长方柱类】
+编写基于对象的程序，求5个长方柱的体积和表面积。长方柱类Bulk的数据成员包括长（length）、宽（width）、高（heigth）等。
+对照已经给出的代码，要做的工作及要求有：
+需要你定义长方柱类，代码中已经给出由5个长方柱对象构成的对象数组b；
+B数组中的前3个对象b[0]、b[1]、b[2]直接参数初始了，需要定义构造函数，而初始化中，各对象提供的参数数目不同，需要有默认参数的构造函数（未给出的参数默认为1.0）
+第4个对象b[3]用默认构造函数初始化；
+第5个长方柱b[4]定义时不初始化，设计成员函数get_value，由键盘输入长、宽、高；
+设计成员函数output，在main中调用输出这5个长方柱的体积和表面积；
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+int main()  
+{  
+     Bulk b[5]={Bulk(2.3,4.5,6.7),Bulk(1.5,3.4),Bulk(10.5)};  
+     b[4].get_value();  
+     //下面分别输出这5个长方柱的体积和表面积  
+}  
+[参考解答]
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Bulk  
+{  
+public:  
+    Bulk(double x=1.0,double y=1.0,double z=1.0):lengh(x),width(y),height(z) {};  
+    void get_value();  
+    void display();  
+private:  
+    double lengh;  
+    double width;  
+    double height;  
+};  
+  
+void Bulk::get_value()  
+{  
+    cout<<"please input lengh, width, height:";  
+    cin>>lengh;  
+    cin>>width;  
+    cin>>height;  
+}  
+  
+void Bulk::display()  
+{  
+    cout<<"    The volume is: "<<lengh*width*height<<endl;  
+    cout<<"    The surface area is: "<<2*(lengh*width+lengh*height+width*height)<<endl;  
+    cout<<endl;  
+}  
+  
+int main()  
+{  
+    Bulk b[5]= {Bulk(2.3,4.5,6.7),Bulk(1.5,3.4),Bulk(10.5)};  
+    b[4].get_value();  
+    //下面分别输出这个长方柱的体积和表面积  
+    for(int i=0; i<5; ++i)  
+    {  
+        cout<<"关于b["<<i<<"]"<<endl;  
+        b[i].display();  
+    }  
+    return 0;  
+}  

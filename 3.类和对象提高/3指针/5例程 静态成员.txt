@@ -1,0 +1,176 @@
+问题的提出
+现状：n个同类的对象，每一个对象都分别有自己的数据成员，各自有值，互不相干。
+期望：希望有某一个或几个数据成员为某类所有对象所共有，以实现数据共享。
+方案：用全局变量
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+using namespace std;  
+int N = 0;  
+class Class  
+{  
+private:  
+   int a;  
+public:  
+   Class(){N++;a=0;}  
+   void add(){N++;}  
+};  
+  
+  
+int main( )  
+{  
+    Class c1, c2;  
+    N=300;  
+    c1.add();  
+    cout<<N<<endl;  
+    return 0;  
+}  
+
+
+例 引用静态数据成员
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Student  
+{  
+public:  
+    Student(int n,string nam, int a):  
+            num(n),name(nam),age(a) { ++count; }  
+    ~Student() { --count; }  
+    int getCount()   { return count; }  
+private:  
+    static int count;  
+    int num;  
+    string name;  
+    int age;  
+};  
+  
+  
+int Student::count=0;  
+int main( )  
+{  
+    Student stu1(1001,"He",40);  
+    cout<<stu1.getCount()<<endl;  
+    Student *pt=new Student(1001,"You",20);  
+    cout<<pt->getCount()<<endl;  
+    cout<<stu1.getCount()<<endl;  
+    delete pt;  
+    cout<<stu1.getCount()<<endl;  
+    return 0;  
+}  
+
+
+用类名访问静态数据成员
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Student  
+{  
+public:  
+    Student(int n,string nam, int a):  
+            num(n),name(nam),age(a) { ++count; }  
+    ~Student() { --count; }  
+    int getCount()   { return count; }  
+    static int count;  
+private:  
+    int num;  
+    string name;  
+    int age;  
+};  
+  
+  
+int Student::count=0;  
+int main( )  
+{  
+    cout<<Student::count<<endl;  
+    Student *pt=new Student(1001,"You",20);  
+    cout<<pt->getCount()<<endl;  
+    delete pt;  
+    cout<<Student::count<<endl;  
+    return 0;  
+}  
+
+
+为什么出错？
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Student  
+{  
+public:  
+    Student(int n,string nam, int a):  
+            num(n),name(nam),age(a) { ++count; }  
+    ~Student() { --count; }  
+    int getCount()   { return count; }  
+private:  
+    static int count;  
+    int num;  
+    string name;  
+    int age;  
+};  
+int Student::count=0;  
+int main( )  
+{  
+    cout<<Student::getCount()<<endl;   
+    cout<<Student::count<<endl;  
+    Student *pt=new Student(1001,"You",20);  
+    cout<<pt->getCount()<<endl;  
+    delete pt;  
+    return 0;  
+}  
+
+
+静态成员函数
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Student  
+{  
+public:  
+    Student(int n,string nam, int a):  
+            num(n),name(nam),age(a) { ++count; }  
+    ~Student() { --count; }  
+    static int getCount()   { return count; }  
+private:  
+    static int count;  
+    int num;  
+    string name;  
+    int age;  
+};  
+int Student::count=0;  
+int main( )  
+{  
+    cout<<Student::getCount()<<endl;   
+    Student *pt=new Student(1001,"You",20);  
+    cout<<pt->getCount()<<endl;  
+    delete pt;  
+    return 0;  
+}  
+
+
+静态成员函数不能处理非静态数据成员
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Student  
+{  
+public:  
+    Student(int n,string nam, int a):  
+            num(n),name(nam),age(a) { ++count; }  
+    ~Student() { --count; }  
+    static int getCount()     
+        { age++; return count; }  
+private:  
+    static int count;  
+    int num;  
+    string name;  
+    int age;  
+};  
+int Student::count=0;  
+int main( )  
+{  
+    cout<<Student::getCount()<<endl;   
+    Student *pt=new Student(1001,"You",20);  
+    cout<<pt->getCount()<<endl;  
+    delete pt;  
+    return 0;  
+} 

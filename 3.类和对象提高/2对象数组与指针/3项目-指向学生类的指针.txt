@@ -1,0 +1,359 @@
+【项目4-指向学生类的指针】
+设计一个学生类Student，数据成员包括学号(num)和成绩(score)，成员函数根据需要自行设计（建议配备需要的set、get函数，以及必要的输入或输出，给出的代码中也可以找到需要成员函数的线索）。在main函数中，要做到：
+建立一个对象数组，通过初始化，设置5个学生的数据，要求：
+用指针指向数组首元素，输出第1、3、5个学生的信息；
+设计一个函数int max(Student *arr);，用指向对象的指针作函数参数，在max函数中找出5个学生中成绩最高者，并返回值其学号。
+下面给出部分程序，在此基础上完成项目：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class Student  
+{  
+public:  
+    ……  
+private:  
+    int num;   //学号  
+    double score;   //成绩  
+};  
+  
+//max函数返回arr指向的对象数组中的最高成绩（max并不是成员函数，而是普通函数）  
+int max(Student *arr);  
+  
+int main()  
+{  
+    Student stud[5]=  
+    {  
+        Student(101,78.5),Student(102,85.5),Student(103,100),  
+        Student(104,98.5),Student(105,95.5)  
+    };  
+    //输出第1、3、5个学生的信息（用循环语句）  
+    ……  
+    //输出成绩最高者的学号  
+    cout<<"5个学生中成绩最高者的学号为: "<<max(stud);//调用函数显示最高成绩  
+    return 0;  
+}  
+  
+  
+//定义函数max，返回arr指向的对象数组中的最高成绩，返回值为最高成绩者的学号  
+int max(Student *arr)  
+{  
+//求最高成绩及对应同学的学号  
+  
+  
+//返回最高成绩者的学号     
+  
+}  
+[参考解答]
+
+
+【项目4-指向学生类的指针】
+设计一个学生类Student，数据成员包括学号(num)和成绩(score)，成员函数根据需要自行设计（建议配备需要的set、get函数，以及必要的输入或输出，给出的代码中也可以找到需要成员函数的线索）。在main函数中，要做到：
+建立一个对象数组，通过初始化，设置5个学生的数据，要求：
+用指针指向数组首元素，输出第1、3、5个学生的信息；
+设计一个函数int max(Student *arr);，用指向对象的指针作函数参数，在max函数中找出5个学生中成绩最高者，并返回值其学号。
+下面给出部分程序，在此基础上完成项目：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class Student  
+{  
+public:  
+    ……  
+private:  
+    int num;   //学号  
+    double score;   //成绩  
+};  
+  
+//max函数返回arr指向的对象数组中的最高成绩（max并不是成员函数，而是普通函数）  
+int max(Student *arr);  
+  
+int main()  
+{  
+    Student stud[5]=  
+    {  
+        Student(101,78.5),Student(102,85.5),Student(103,100),  
+        Student(104,98.5),Student(105,95.5)  
+    };  
+    //输出第1、3、5个学生的信息（用循环语句）  
+    ……  
+    //输出成绩最高者的学号  
+    cout<<"5个学生中成绩最高者的学号为: "<<max(stud);//调用函数显示最高成绩  
+    return 0;  
+}  
+  
+  
+//定义函数max，返回arr指向的对象数组中的最高成绩，返回值为最高成绩者的学号  
+int max(Student *arr)  
+{  
+//求最高成绩及对应同学的学号  
+  
+  
+//返回最高成绩者的学号     
+  
+}  
+
+[参考解答]
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+  
+class Student  
+{  
+public:  
+    Student(int n,double s):num(n),score(s) {}  
+    void display();  
+    int getNum()  
+    {  
+        return num;  
+    }  
+    double getScore()  
+    {  
+        return score;  
+    }  
+private:  
+    int num;   //学号  
+    double score;   //成绩  
+};  
+  
+void Student::display()  
+{  
+    cout<<num<<" "<<score<<endl;  
+}  
+  
+//max函数返回arr指向的对象数组中的最高成绩者的学号  
+int max(Student *arr);  
+  
+int main()  
+{  
+    Student stud[5]=  
+    {  
+        Student(101,78.5),Student(102,85.5),Student(103,100),  
+        Student(104,98.5),Student(105,95.5)  
+    };  
+  
+    //输出第1、3、5个学生的信息  
+    for(int i=0; i<5; i+=2)  
+    {  
+        cout<<"学生"<<i+1<<": ";  
+        stud[i].display();  
+    }  
+    //找出个学生中成绩最高者，并输出其学号  
+    cout<<"5个学生中成绩最高者的学号为: "<<max(stud);//调用函数显示最高成绩  
+    return 0;  
+}  
+  
+//定义函数max，返回arr指向的对象数组中的最高成绩者的学号  
+int max(Student *arr)  
+{  
+    double max_score=arr[0].getScore();//通过公共的成员函数取出私立有的数据成员，用好此法  
+    int k=0;  
+    for(int i=1; i<5; i++)  
+        if(arr[i].getScore()>max_score)  
+        {  
+            max_score=arr[i].getScore();  
+            k=i;  
+        }  
+    return arr[k].getNum();  
+}  
+
+　　有同学提出，要是最高成绩者不止一位该如何去做？上面的解法，是在没有相同成绩的前提下做的，确实不够实际。
+　　下面的解法，将max函数定义为，返回最高成绩，而在main函数中将多位同学的学号输出。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <cmath>  
+using namespace std;  
+  
+class Student  
+{  
+public:  
+    Student(int n,double s):num(n),score(s) {}  
+    void display();  
+    int getNum()  
+    {  
+        return num;  
+    }  
+    double getScore()  
+    {  
+        return score;  
+    }  
+private:  
+    int num;   //学号  
+    double score;   //成绩  
+};  
+  
+void Student::display()  
+{  
+    cout<<num<<" "<<score<<endl;  
+}  
+  
+//max函数返回arr指向的对象数组中的最高成绩  
+double max(Student *arr);  
+  
+int main()  
+{  
+    Student stud[5]=  
+    {  
+        Student(101,78.5),Student(102,85.5),Student(103,100),  
+        Student(104,98.5),Student(105,100)  
+    };  
+  
+    //输出第1、3、5个学生的信息  
+    for(int i=0; i<5; i+=2)  
+    {  
+        cout<<"学生"<<i+1<<": ";  
+        stud[i].display();  
+    }  
+    //找出个学生中成绩最高者，并输出其学号  
+    double max_score = max(stud); //调用函数求最高成绩  
+    cout<<"5个学生中成绩最高者的学号为: ";  
+    for(int i=0; i<5; i++)  
+    {  
+        if(abs(stud[i].getScore() - max_score)<1e-7)  //浮点数不能直接比较相等，只要相减小于一个很小的值，就认为相等  
+            cout<<stud[i].getNum()<<"  ";  
+    }  
+    cout<<endl;  
+    return 0;  
+}  
+  
+//定义函数max，返回arr指向的对象数组中的最高成绩  
+double max(Student *arr)  
+{  
+    double max_score=arr[0].getScore();//通过公共的成员函数取出私立有的数据成员，用好此法  
+    for(int i=1; i<5; i++)  
+        if(arr[i].getScore()>max_score)  
+        {  
+            max_score=arr[i].getScore();  
+        }  
+    return max_score;  
+}  
+
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+  
+class Student  
+{  
+public:  
+    Student(int n,double s):num(n),score(s) {}  
+    void display();  
+    int getNum()  
+    {  
+        return num;  
+    }  
+    double getScore()  
+    {  
+        return score;  
+    }  
+private:  
+    int num;   //学号  
+    double score;   //成绩  
+};  
+  
+void Student::display()  
+{  
+    cout<<num<<" "<<score<<endl;  
+}  
+  
+//max函数返回arr指向的对象数组中的最高成绩者的学号  
+int max(Student *arr);  
+  
+int main()  
+{  
+    Student stud[5]=  
+    {  
+        Student(101,78.5),Student(102,85.5),Student(103,100),  
+        Student(104,98.5),Student(105,95.5)  
+    };  
+  
+    //输出第1、3、5个学生的信息  
+    for(int i=0; i<5; i+=2)  
+    {  
+        cout<<"学生"<<i+1<<": ";  
+        stud[i].display();  
+    }  
+    //找出个学生中成绩最高者，并输出其学号  
+    cout<<"5个学生中成绩最高者的学号为: "<<max(stud);//调用函数显示最高成绩  
+    return 0;  
+}  
+  
+//定义函数max，返回arr指向的对象数组中的最高成绩者的学号  
+int max(Student *arr)  
+{  
+    double max_score=arr[0].getScore();//通过公共的成员函数取出私立有的数据成员，用好此法  
+    int k=0;  
+    for(int i=1; i<5; i++)  
+        if(arr[i].getScore()>max_score)  
+        {  
+            max_score=arr[i].getScore();  
+            k=i;  
+        }  
+    return arr[k].getNum();  
+}  
+
+　　周经纬同学提出，要是最高成绩者不止一位该如何去做？上面的解法，是在没有相同成绩的前提下做的，确实不够实际。
+　　下面的解法，将max函数定义为，返回最高成绩，而在main函数中将多位同学的学号输出。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <cmath>  
+using namespace std;  
+  
+class Student  
+{  
+public:  
+    Student(int n,double s):num(n),score(s) {}  
+    void display();  
+    int getNum()  
+    {  
+        return num;  
+    }  
+    double getScore()  
+    {  
+        return score;  
+    }  
+private:  
+    int num;   //学号  
+    double score;   //成绩  
+};  
+  
+void Student::display()  
+{  
+    cout<<num<<" "<<score<<endl;  
+}  
+  
+//max函数返回arr指向的对象数组中的最高成绩  
+double max(Student *arr);  
+  
+int main()  
+{  
+    Student stud[5]=  
+    {  
+        Student(101,78.5),Student(102,85.5),Student(103,100),  
+        Student(104,98.5),Student(105,100)  
+    };  
+  
+    //输出第1、3、5个学生的信息  
+    for(int i=0; i<5; i+=2)  
+    {  
+        cout<<"学生"<<i+1<<": ";  
+        stud[i].display();  
+    }  
+    //找出个学生中成绩最高者，并输出其学号  
+    double max_score = max(stud); //调用函数求最高成绩  
+    cout<<"5个学生中成绩最高者的学号为: ";  
+    for(int i=0; i<5; i++)  
+    {  
+        if(abs(stud[i].getScore() - max_score)<1e-7)  //浮点数不能直接比较相等，只要相减小于一个很小的值，就认为相等  
+            cout<<stud[i].getNum()<<"  ";  
+    }  
+    cout<<endl;  
+    return 0;  
+}  
+  
+//定义函数max，返回arr指向的对象数组中的最高成绩  
+double max(Student *arr)  
+{  
+    double max_score=arr[0].getScore();//通过公共的成员函数取出私立有的数据成员，用好此法  
+    for(int i=1; i<5; i++)  
+        if(arr[i].getScore()>max_score)  
+        {  
+            max_score=arr[i].getScore();  
+        }  
+    return max_score;  
+}  

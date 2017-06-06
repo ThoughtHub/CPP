@@ -1,0 +1,151 @@
+基于对象
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Cup{  
+private:  
+    double radius;  
+    double height;  
+public:  
+    Cup(double r, double h){  
+        radius = r;  
+        height = h;  
+    }  
+    double getvolume(){  
+        return 3.14 * radius * radius * height;  
+    }  
+};  
+int main(){  
+    double r, h;  
+    cin>>r>>h;  
+    Cup c(r, h);  
+    cout<<c.getvolume()<<endl;  
+    return 0;  
+} 
+
+类的声明和对象的定义-形式1
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include  <iostream>  
+#include <cstring>  
+using namespace std;  
+class Student  
+{  
+private:  
+    int num;  
+    char name[20];  
+    char sex;  
+public:  
+    void set_data(int n, char *p,char s)  
+    {  
+        num=n;  
+        strcpy(name,p);  
+        sex=s;  
+    }  
+    void display( )  
+    {  
+        cout<<"num: "<<num<<endl;  
+        cout<<"name: " <<name<<endl;  
+        cout<<"sex: " <<sex<<endl<<endl;  
+    }  
+};  
+int main()  
+{  
+    Student stud1,stud2;  
+    stud1.set_data(1,"He",'f');  
+    stud2.set_data(2,"She",'m');  
+    stud1.display();  
+    stud2.display();  
+    return 0;  
+}  
+
+
+类声明的第2种形式——更实用和常见
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <cstring>  
+using namespace std;  
+class Student  
+{  
+public:  
+    void set_data(int n, char *p,char s);  
+    void display( );  
+private:  
+    int num;  
+    char name[20];  
+    char sex;  
+};  
+void Student::set_data(int n, char *p,char s)  
+{  
+    num=n;  
+    strcpy(name,p);  
+    sex=s;  
+}  
+void Student::display( )  
+{  
+    cout<<"num: "<<num<<endl;  
+    cout<<"name: " <<name<<endl;  
+    cout<<"sex: " <<sex<<endl<<endl;  
+}  
+int main()  
+{  
+    Student stud1,stud2;  
+    stud1.set_data(1,"He",'f');  
+    //stud1.sex='m';  
+    //strcpy(stud1.name,"You");  
+    stud2.set_data(2,"She",'m');  
+    stud1.display();  
+    stud2.display();  
+    return 0;  
+}  
+
+
+并非所有成员函数必须公有
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    void set_time( );  
+    void show_time( );  
+private:  
+    bool is_time(int, int, int);  
+    int hour;  
+    int minute;  
+    int sec;  
+};  
+  
+void Time::set_time( )  
+{  
+    char c1,c2;  
+    cout<<"请输入时间(格式hh:mm:ss)";  
+    while(1)  
+    {  
+        cin>>hour>>c1>>minute>>c2>>sec;  
+        if(c1!=':'||c2!=':')  
+            cout<<"格式不正确，请重新输入"<<endl;  
+        else if (!is_time(hour,minute,sec))  
+            cout<<"时间非法，请重新输入"<<endl;  
+        else  
+            break;  
+    }  
+}  
+  
+void Time::show_time( )  
+{  
+    cout<<hour<<":"<<minute<<":"<<sec<<endl;  
+}  
+  
+bool Time::is_time(int h,int m, int s)  
+{  
+    if (h<0 ||h>24 || m<0 ||m>60 || s<0 ||s>60)  
+        return false;  
+    return true;  
+}  
+int main( )  
+{  
+    Time t1;  
+    t1.set_time( );  
+    t1.show_time( );  
+    return 0;  
+}  

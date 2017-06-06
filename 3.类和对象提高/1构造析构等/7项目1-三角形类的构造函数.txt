@@ -1,0 +1,246 @@
+【项目1-三角形类的构造函数】
+　　设计三角形类，通过增加构造函数，使对象在定义时能够进行初始化，可以由下面的类声明开始，需要自己实现相关的成员函数，以及增加要求的构造函数
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class Triangle  
+{  
+public:  
+    double perimeter();//计算三角形的周长  
+    double area();//计算并返回三角形的面积  
+    void showMessage();  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+void Triangle::showMessage()  
+{  
+    cout<<"三角形的三边长分别为："<<a<<' '<<b<<' '<<c<<endl;  
+    cout<<"该三角形的周长为"<<perimeter()<<"，面积为："<<area()<<endl<<endl;  
+}  
+
+本项目将包括多个版本，开始写程序前，保证搞清楚何为带参数的构造函数、默认构造函数、有默认参数的构造函数、参数初始化表。
+　　（1）使用带参数构造函数，即Triangle(double x, double y, double z)，三边长在调用时由实参直接给出。需要的测试函数是：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+int main(){  
+    Triangle Tri(7,8,9);    //定义三角形类的一个实例（对象）  
+    Tri.showMessage();  
+    return 0;  
+}  
+
+（2）设计默认构造函数，即不指定参数时，默认各边长为1。需要的测试函数是：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+int main()  
+{  
+    Triangle Tri;   //调用默认构造函数，不指定参数时，默认各边长为1；  
+    Tri.showMessage();  
+    return 0;  
+}  
+
+
+（3）使用有默认参数的构造函数，不给定实参时，默认边长为1；注意——这个版本也只需要一个构造函数即可。需要的测试函数是：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+int main(){  
+    Triangle Tri1;   //定义边长为1 1 1的三角形类实例  
+    Tri1.showMessage();  
+    Triangle Tri2(1.5);//定义边长为1.5 1 1的三角形类实例  
+    Tri2.showMessage();  
+    Triangle Tri3(1.5,1.5);//定义边长为1.5 1.5 1的三角形类实例  
+    Tri3.showMessage();  
+    Triangle Tri4(7,8,9); //定义边长为7 8 9的三角形类实例  
+    Tri4.showMessage();  
+    return 0;  
+}  
+（4）在构造函数中使用参数初始化表对数据成员初始化，这是一种更加提倡的写法。测试函数同（1）。
+
+[参考解答]
+（1）
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+
+
+#include<iostream>  
+#include<Cmath>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    Triangle(double x, double y, double z)//（1）使用带参数构造函数  
+    {  
+        a=x;      
+        b=y;  
+        c=z;  
+    }  
+    double perimeter();//计算三角形的周长  
+    double area();//计算并返回三角形的面积  
+    void showMessage();  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+  
+double Triangle::perimeter()  
+{  
+    return (a + b + c);  
+}  
+  
+double Triangle::area()  
+{  
+    double s = (a + b + c) / 2;  
+    return sqrt(s * (s - a) * (s - b) * (s - c));  
+}  
+  
+void Triangle::showMessage()  
+{  
+    cout<<"三角形的三边长分别为："<<a<<' '<<b<<' '<<c<<endl;  
+    cout<<"该三角形的周长为"<<perimeter()<<"，面积为"<<area()<<endl<<endl;  
+}  
+  
+  
+int main()  
+{  
+    Triangle Tri(7,8,9);    //定义三角形类的一个实例（对象）  
+    Tri.showMessage();  
+    return 0;  
+}  
+
+
+（2）
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    Triangle()//（2）默认构造函数，即不指定参数时，默认各边长为1  
+    {  
+        a=1;  
+        b=1;  
+        c=1;  
+    }  
+    double perimeter();//计算三角形的周长  
+    double area();//计算并返回三角形的面积  
+    void showMessage();  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+  
+double Triangle::perimeter()  
+{  
+    return (a + b + c);  
+}  
+  
+double Triangle::area()  
+{  
+    double s = (a + b + c) / 2;  
+    return sqrt(s * (s - a) * (s - b) * (s - c));  
+}  
+  
+void Triangle::showMessage()  
+{  
+    cout<<"三角形的三边长分别为："<<a<<' '<<b<<' '<<c<<endl;  
+    cout<<"该三角形的周长为"<<perimeter()<<"，面积为"<<area()<<endl<<endl;  
+}  
+  
+int main()  
+{  
+    Triangle Tri;   //调用默认构造函数，不指定参数时，默认各边长为1；  
+    Tri.showMessage();  
+    return 0;  
+}  
+
+
+（3）
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    Triangle(double x=1, double y=1, double z=1);//（3）声明使用默认参数的构造函数，不给定实参时，默认边长为1；  
+    double perimeter();//计算三角形的周长  
+    double area();//计算并返回三角形的面积  
+    void showMessage();  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+  
+//本参考解答在类声明之外实现  
+Triangle::Triangle(double x, double y, double z)  
+{  
+    a=x;  
+    b=y;  
+    c=z;  
+}  
+  
+double Triangle::perimeter()  
+{  
+    return (a + b + c);  
+}  
+  
+double Triangle::area()  
+{  
+    double s = (a + b + c) / 2;  
+    return sqrt(s * (s - a) * (s - b) * (s - c));  
+}  
+  
+void Triangle::showMessage()  
+{  
+    cout<<"三角形的三边长分别为："<<a<<' '<<b<<' '<<c<<endl;  
+    cout<<"该三角形的周长为"<<perimeter()<<"，面积为"<<area()<<endl<<endl;  
+}  
+  
+int main()  
+{  
+    Triangle Tri1;   //定义边长为1 1 1的三角形类实例  
+    Tri1.showMessage();  
+    Triangle Tri2(1.5);//定义边长为1.5 1 1的三角形类实例  
+    Tri2.showMessage();  
+    Triangle Tri3(1.5,1.5);//定义边长为1.5 1.5 1的三角形类实例  
+    Tri3.showMessage();  
+    Triangle Tri4(7,8,9); //定义边长为7 8 9的三角形类实例  
+    Tri4.showMessage();  
+    return 0;  
+}  
+
+
+（4）
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    Triangle(double x=1, double y=1, double z=1) :a(x),b(y),c(z){}  //（4）在构造函数中使用参数初始化表  
+    double perimeter();//计算三角形的周长  
+    double area();//计算并返回三角形的面积  
+    void showMessage();  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+  
+double Triangle::perimeter()  
+{  
+    return (a + b + c);  
+}  
+  
+double Triangle::area()  
+{  
+    double s = (a + b + c) / 2;  
+    return sqrt(s * (s - a) * (s - b) * (s - c));  
+}  
+  
+void Triangle::showMessage()  
+{  
+    cout<<"三角形的三边长分别为："<<a<<' '<<b<<' '<<c<<endl;  
+    cout<<"该三角形的周长为"<<perimeter()<<"，面积为"<<area()<<endl<<endl;  
+}  
+  
+int main()  
+{  
+    Triangle Tri(7,8,9);    //定义三角形类的一个实例（对象）  
+    Tri.showMessage();  
+    return 0;  
+}  
+
+　　或者，将构造函数定义在类外时，写成为：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+Triangle::Triangle(double x, double y, double z):a(x),b(y),c(z){}   //（4）在构造函数中使用参数初始化表

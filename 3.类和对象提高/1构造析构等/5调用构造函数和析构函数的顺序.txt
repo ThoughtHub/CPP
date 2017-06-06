@@ -1,0 +1,94 @@
+析构函数应用实例
+方案1
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+const int N =500;  
+class Salary  
+{  
+public:  
+    Salary(int);  
+    void input( );  
+    void show( );  
+    ~Salary();  
+private:  
+    double salarys[N];  
+    int number; //实际人数  
+};  
+
+
+方案2
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class Salary  
+{  
+public:  
+    Salary(int);  
+    void input( );  
+    void show( );  
+    ~Salary();  
+private:  
+    double *salarys;  
+    int number; //实际人数  
+};  
+Salary::Salary(int n)  
+{  
+    number = n;  
+    salarys=new double[number];    
+}  
+Salary::~Salary()  
+{  
+    delete []salarys;  
+}  
+
+
+谁先分配? 谁先释放？
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Salary  
+{  
+public:  
+    Salary(int);  
+    void input( );  
+    void show( );  
+    ~Salary();  
+private:  
+    double *salarys;  
+    int number; //实际人数  
+};  
+Salary::Salary(int n)  
+{  
+    number = n;  
+    salarys=new double[number];  //分配大小正好合适的空间存放数据  
+}  
+Salary::~Salary()  
+{  
+    delete []salarys;  
+}  
+void Salary::input( )  
+{  
+    double x;  
+    int i;  
+    for(i=0; i<number; ++i)  
+    {  
+        cin>>x;  
+        salarys[i]=x;  
+    }  
+}  
+  
+void Salary::show( )  
+{  
+    int i;  
+    for (i=0; i<number; i++)  
+        cout<<salarys[i]<<" ";  
+    cout<<endl;  
+}  
+  
+int main( )  
+{  
+    Salary s1(50);  
+    s1.input( );  
+    Salary s2(1248);  
+    s2.input( );  
+    s1.show( );  
+    s2.show( );  
+    return 0;  
+}  

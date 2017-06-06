@@ -1,0 +1,157 @@
+#include<iostream>  
+#include<cstring>  
+using namespace std;  
+class Student  
+{  
+private:  
+    char Name[20];  //学生姓名  
+    double Chinese; //语文成绩  
+    double Math;        //数学成绩  
+public:  
+    double Average( );//计算平均成绩  
+    double Sum( );  //计算总分  
+    void Show( );   //打印信息  
+    void SetStudentdent(char*,double,double);//为对象置姓名、成绩  
+    void SetName(char *);   //为对象置姓名  
+    char *GetName( );   //取得学生姓名  
+};  
+double Student::Average( )  
+{  
+    return (Chinese+Math)/2;  
+}//平均成绩  
+  
+  
+double Student::Sum( )  
+{  
+    return Chinese+Math;  
+}        //总分  
+void Student::Show( )   //打印信息  
+{  
+    cout<<"Name:  "<<Name<<endl<<"Score:  "<<Chinese<<'\t'<<  
+        Math<<'\t'<<"average:  "<<Average()<<'\t'<<"Sum:   "<<Sum()<<endl;  
+}  
+void Student::SetStudentdent(char *name,double chinese,double math)  
+{  
+    strcpy(Name,name);  //置姓名  
+    Chinese=chinese;    //置语文成绩  
+    Math=math;  //置数学成绩  
+}  
+  
+  
+void Student::SetName(char *name)  
+{  
+    strcpy(Name,name);  //置姓名  
+}  
+  
+  
+char * Student::GetName( )  
+{  
+    return Name;  
+}//返回姓名  
+  
+  
+int main( )  
+{  
+    Student  p1,p2;  
+    p1.SetStudentdent("Li qing",98,96); //对象置初值  
+    p2.SetStudentdent("Wang Gang",90,88); //对象置初值  
+    p1.Show();//打印信息  
+    p2.Show();//打印信息  
+    p1.SetName("Zhao jian");//重新置p1对象的名字  
+    p1.Show();  
+    cout<<"p1.Name: "<<p1.GetName()<<endl;//打印对象的名字  
+    cout<<"p1.average: "<<p1.Average()<<endl;//打印对象的成绩  
+    return 0;  
+}  
+
+
+
+2、一个程序，多个源/头文件的做法
+student.h
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#ifndef STUDENT_H_INCLUDED  
+#define STUDENT_H_INCLUDED  
+  
+  
+class Student  
+{  
+private:  
+    char Name[20];  //学生姓名  
+    double Chinese; //语文成绩  
+    double Math;        //数学成绩  
+public:  
+    double Average( );//计算平均成绩  
+    double Sum( );  //计算总分  
+    void Show( );   //打印信息  
+    void SetStudentdent(char*,double,double);//为对象置姓名、成绩  
+    void SetName(char *);   //为对象置姓名  
+    char *GetName( );   //取得学生姓名  
+};  
+  
+  
+#endif // STUDENT_H_INCLUDED  
+
+
+student.cpp
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<cstring>  
+#include "student.h"  
+using namespace std;  
+  
+  
+double Student::Average( )  
+{  
+    return (Chinese+Math)/2;  
+}//平均成绩  
+  
+  
+double Student::Sum( )  
+{  
+    return Chinese+Math;  
+}        //总分  
+  
+  
+void Student::Show( )   //打印信息  
+{  
+    cout<<"Name:  "<<Name<<endl<<"Score:  "<<Chinese<<'\t'<<  
+        Math<<'\t'<<"average:  "<<Average()<<'\t'<<"Sum:   "<<Sum()<<endl;  
+}  
+void Student::SetStudentdent(char *name,double chinese,double math)  
+{  
+    strcpy(Name,name);  //置姓名  
+    Chinese=chinese;    //置语文成绩  
+    Math=math;  //置数学成绩  
+}  
+  
+  
+void Student::SetName(char *name)  
+{  
+    strcpy(Name,name);  //置姓名  
+}  
+  
+  
+char * Student::GetName( )  
+{  
+    return Name;  
+}//返回姓名  
+
+
+main.cpp
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include "student.h"  
+using namespace std;  
+int main( )  
+{  
+    Student  p1,p2;  
+    p1.SetStudentdent("Li qing",98,96); //对象置初值  
+    p2.SetStudentdent("Wang Gang",90,88); //对象置初值  
+    p1.Show();//打印信息  
+    p2.Show();//打印信息  
+    p1.SetName("Zhao jian");//重新置p1对象的名字  
+    p1.Show();  
+    cout<<"p1.Name: "<<p1.GetName()<<endl;//打印对象的名字  
+    cout<<"p1.average: "<<p1.Average()<<endl;//打印对象的成绩  
+    return 0;  
+}  

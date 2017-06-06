@@ -1,0 +1,74 @@
+编写一个Book类，包含name（书名)、writer（著者）、public_name（出版社）、price（价格）、number（数量）、NO（书号）等数据成员。定义成员函数setBook，用来为书籍的数据成员赋值，定义成员函数borrow和restore，分别办理借出和还回（借、还书时，暂时只完成数量的增1减1，这里的书仍是一种书的概念，随着课程进展，我们继续做真正的图书管理系统，每本书都能追踪到是谁何时借了，何时还了）业务，定义成员函数print用于输出—有关书的信息，定义set_NO与get_NO来实现修改类对象的书号与获得类对象的书号。自己写main函数，用来测试你编写的类。
+
+［参考解答］
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <cstring>  
+using namespace std;  
+class Book  
+{  
+    char name[60];  
+    char writer[20];  
+    char public_name[30];  
+    float price;  
+    int number;  
+    int NO;  
+public:  
+    void setBook(char * na,char *wr,char *pu, float pr,int nu,int no );  
+    void set_NO(int n);  
+    int get_NO( );  
+    void borrow( );  
+    void restore( );  
+    void print( );  
+};  
+  
+int main()  
+{  
+    Book aBook;  
+    aBook.setBook("Change in University", "He Lijian","Posts & Telecom Press",49,5,1234);  
+    aBook.print();  
+    aBook.borrow();  
+    aBook.print();  
+    aBook.restore();  
+    aBook.print();  
+    aBook.set_NO(4321);  
+    aBook.print();  
+    cout<<"new book NO: " <<aBook.get_NO()<<endl;  
+    return 0;  
+}  
+  
+  
+void Book::setBook(char * na,char *wr,char *pu, float pr,int nu,int no )  
+{  
+    strcpy(name,na);  
+    strcpy(writer ,wr);  
+    strcpy(public_name , pu);  
+    price=pr;  
+    number=nu;  
+    NO=no;  
+}  
+void Book::set_NO(int n)  
+{  
+    NO=n;  
+}  
+int Book::get_NO( )  
+{  
+    return NO;  
+}  
+void Book::borrow( )  
+{  
+    number--;  
+}  
+void Book::restore( )  
+{  
+    number++;  
+}  
+void Book::print( )  
+{  
+    cout<<"name: "<<name<<endl;  
+    cout<<"writer: "<<writer<<endl;  
+    cout<<"public name: "<<public_name<<endl;  
+    cout<<"price: "<<price<<endl;  
+    cout<<"number: "<<number<<endl;  
+    cout<<"NO: "<<NO<<endl<<endl;  
+}

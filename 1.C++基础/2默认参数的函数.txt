@@ -1,0 +1,39 @@
+形参/实参、声明/调用/定义
+
+#include <iostream>
+using namespace std;
+int max(int a, int b, int c=0);//仅声明时设默认
+int main( )
+{
+    int a,b,c;
+    cin>>a>>b>>c;
+    cout<<"max(a,b,c)="<<max(a,b,c)<<endl;
+    cout<<"max(a,b)="<<max(a,b)<<endl;
+    return 0;
+}
+int max(int a,int b,int c) //定义时不设默认
+{
+    if(b>a) a=b;
+    if(c>a) a=c;
+    return a;
+}
+
+例用带默认参数的函数实现求最大数
+
+#include <iostream>
+using namespace std;
+int max(int a, int b, int c=0);//仅声明时设默认
+int main( )
+{
+    int a,b,c;
+    cin>>a>>b>>c;
+    cout<<"max(a,b,c)="<<max(a,b,c)<<endl;
+    cout<<"max(a,b)="<<max(a,b)<<endl;
+    return 0;
+}
+int max(int a,int b,int c) //定义时不设默认
+{
+    if(b>a) a=b;
+    if(c>a) a=c;
+    return a;
+}

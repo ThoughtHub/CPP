@@ -1,0 +1,251 @@
+【项目5 - 数组作数据成员】阅读教材P255例8.4，注意到类中的数据成员可以是数组。设计一个工资类(Salary)，其中类的数据成员如下：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class Salary  
+{  
+private:  
+    double salarys[50]; //多人的工资  
+    int number;  //实际人数  
+};  
+要设计的成员函数有：
+void set_salarys( )：输入职工工资（输入-1标志着工资输入结束），工资保存到salary数组中，实际人数保存到number中；
+void add_salarys(int x)：给每个人涨x元工资
+void sort_salarys()：对工资排序
+void show_salarys( )：显示工资信息
+（1）在main函数定义Salary类的对象，输入工资，再给每个人涨500元工资，排序后工资数据，然后输出结果。
+（2）用salary[50]有限制，实际人数少时，会浪费空间，人数多了，无法完成任务。在main()中先输入职工人数，作为参数传递给输入职工工资的成员函数，然后利用动态分配内存的机制，开辟一个大小正好的连续空间，完成上面的工作。
+（3）手工输入工资？！太让人不能忍受了。现给出包含了不足500个职工工资的文件salary.txt（下载），从文件中读数据，完成上面的工作。
+（4）增加一个成员函数，将排序后结果保存到一个文件中。
+（5)用多文件的方式组织最后的程序。
+
+[参考解答]
+（1）在main函数定义Salary类的对象，输入工资，再给每个人涨500元工资，排序后工资数据，然后输出结果。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Salary  
+{  
+public:  
+    void set_salarys( );     //输入工资  
+    void add_salarys(int x); //涨工资  
+    void sort_salarys();     //排序工资  
+    void show_salarys( );    //显示工资  
+private:  
+    double salarys[50]; //工资  
+    int number;         //实际人数  
+};  
+  
+void Salary::set_salarys( )  
+{  
+    int x,i=0;  
+    cin>>x;  
+    while(x>0)  
+    {  
+        salarys[i]=x;  //工资保存到数组数据成员中  
+        ++i;  
+        cin>>x;  
+    }  
+    number=i;   //number是数据成员，记录下职工人数  
+}  
+  
+void Salary::add_salarys(int x)  
+{  
+    int i;  
+    for (i=0;i<number;i++)  
+        salarys[i]+=x;  
+}  
+  
+void Salary::sort_salarys()  
+{  
+    int i,j;  
+    double t;  
+    for (i=0;i<number-1;i++)  
+        for(j=0;j<number-i-1;j++)  
+            if (salarys[j]<salarys[j+1])  
+            {  
+                t=salarys[j];  
+                salarys[j]=salarys[j+1];  
+                salarys[j+1]=t;  
+            }  
+}  
+  
+void Salary::show_salarys( )  
+{  
+    int i;  
+    for (i=0;i<number;i++)  
+        cout<<salarys[i]<<" ";  
+}  
+  
+int main( )  
+{  
+    Salary s;  
+    s.set_salarys( );  
+    s.add_salarys(500);  
+    s.sort_salarys();  
+    s.show_salarys( );  
+    return 0;  
+}  
+
+
+（2）用salary[50]有限制，实际人数少时，会浪费空间，人数多了，无法完成任务。在main()中先输入职工人数，作为参数传递给输入职工工资的成员函数，然后利用动态分配内存的机制，开辟一个大小正好的连续空间，完成上面的工作。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Salary  
+{  
+public:  
+    void set_salarys( );  
+    void add_salarys(int x);  
+    void sort_salarys();  
+    void show_salarys( );  
+private:  
+    double *salarys;    //工资，定义为指针，将来指向一个动态数组  
+    int number;         //实际人数  
+};  
+  
+void Salary::set_salarys( )  
+{  
+    int x,i;  
+    cout<<"请输入职工人数: ";  
+    cin>>number;  
+    salarys=new double[number];  //分配大小正好合适的空间存放数据  
+    cout<<"请输入职工的工资: ";  
+    for(i=0;i<number;++i)  
+    {  
+        cin>>x;  
+        salarys[i]=x;  
+    }  
+}  
+  
+void Salary::add_salarys(int x)  
+{  
+    int i;  
+    for (i=0;i<number;i++)  
+        salarys[i]+=x;  
+}  
+  
+void Salary::sort_salarys()  
+{  
+    int i,j;  
+    double t;  
+    for (i=0;i<number-1;i++)  
+        for(j=0;j<number-i-1;j++)  
+            if (salarys[j]<salarys[j+1])  
+            {  
+                t=salarys[j];  
+                salarys[j]=salarys[j+1];  
+                salarys[j+1]=t;  
+            }  
+}  
+  
+void Salary::show_salarys( )  
+{  
+    int i;  
+    for (i=0;i<number;i++)  
+        cout<<salarys[i]<<" ";  
+}  
+  
+int main( )  
+{  
+    Salary s;  
+    s.set_salarys( );  
+    s.add_salarys(500);  
+    s.sort_salarys();  
+    s.show_salarys( );  
+    return 0;  
+}  
+
+
+（3）手工输入工资？！太让人不能忍受了。现给出包含了不足500个职工工资的文件salary.txt（下载），从文件中读数据，完成上面的工作。
+（4）增加一个成员函数，将排序后结果保存到一个文件中。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <fstream>  
+#include <cstdlib>  
+using namespace std;  
+const int N=500;  
+class Salary  
+{  
+public:  
+    void read_data( );  
+    void write_data();  
+    void add_salarys(int x);  
+    void sort_salarys();  
+    void show_salarys( );  
+private:  
+    double salarys[N]; //工资, 用指针更好  
+    int number;        //人数  
+};  
+  
+void Salary::read_data( )  
+{  
+    int i;  
+    ifstream infile("salary.txt",ios::in);   //以输入的方式打开文件  
+    if(!infile)                 //测试是否成功打开  
+    {  
+        cerr<<"open error!"<<endl;  
+        exit(1);  
+    }  
+    i=0;  
+    while(infile>>salarys[i])  
+        i++;  
+    number=i;  
+    infile.close();  
+}  
+  
+void Salary::write_data( )  
+{  
+    int i;  
+    ofstream outfile("salary_ordered.txt",ios::out);   //以输入的方式打开文件  
+    if(!outfile)                 //测试是否成功打开  
+    {  
+        cerr<<"open error!"<<endl;  
+        exit(1);  
+    }  
+    for(i=0; i<number; ++i)  
+    {  
+        outfile<<salarys[i]<<endl;  
+    }  
+    outfile.close();  
+}  
+  
+void Salary::add_salarys(int x)  
+{  
+    int i;  
+    for (i=0; i<number; i++)  
+        salarys[i]+=x;  
+}  
+  
+void Salary::sort_salarys()  
+{  
+    int i,j;  
+    double t;  
+    for (i=0; i<number-1; i++)  
+        for(j=0; j<number-i-1; j++)  
+            if (salarys[j]<salarys[j+1])  
+            {  
+                t=salarys[j];  
+                salarys[j]=salarys[j+1];  
+                salarys[j+1]=t;  
+            }  
+}  
+  
+void Salary::show_salarys( )  
+{  
+    int i;  
+    for (i=0; i<number; i++)  
+        cout<<salarys[i]<<"\t";  
+}  
+  
+int main( )  
+{  
+    Salary s;  
+    s.read_data( );  
+    s.add_salarys(500);  
+    s.sort_salarys();  
+    s.write_data( );  
+    s.show_salarys( );  
+    return 0;  
+}  
+
+
+（5)用多文件的方式组织最后的程序。

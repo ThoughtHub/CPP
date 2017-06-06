@@ -1,0 +1,131 @@
+【项目 - 长方柱类】
+　　编写基于对象的程序，求3个长方柱（Bulk）的体积。数据成员包括长（length）、宽（width）、高（heigth）、体积，要求设计成员函数实现下面的功能：
+　　（1）由键盘输入3个长方柱的长、宽、高；
+　　（2）计算长方柱的体积（volume）和表面积（areas）；
+　　（3）输出这3个长方柱的体积和表面积；
+
+［参考解答］
+写出的程序结构应该如下：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class Bulk  
+{//定义需要的成员函数  
+ //定义数据成员  
+};  
+//此处实现各成员函数  
+int main()  
+{  
+}  
+
+具体情况可以有多种设计。
+【解决方案1】这一个方案给出用最少的数据成员（3个）和成员函数（2个）的解决办法 
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Bulk  
+{  
+public:  
+    void get_value();  
+    void display();  
+private:  
+    float lengh;  
+    float width;  
+    float height;  
+};  
+  
+void Bulk::get_value()  
+{   
+    cout<<"please input lengh, width,height:";  
+    cin>>lengh;  
+    cin>>width;  
+    cin>>height;  
+}  
+  
+void Bulk::display()  
+{   
+    cout<<"The volume is: "<<lengh*width*height<<endl;  
+    cout<<"The surface area is: "<<2*(lengh*width+lengh*height+width*height)<<endl;  
+}  
+  
+int main()  
+{  
+    Bulk b1,b2,b3;  
+  
+    b1.get_value();  
+    cout<<"For bulk1: "<<endl;  
+    b1.display();  
+  
+    b2.get_value();  
+    cout<<"For bulk2: "<<endl;  
+    b2.display();  
+  
+    b3.get_value();  
+    cout<<"For bulk3: "<<endl;  
+    b3.display();  
+    return 0;  
+}  
+
+【解决方案2】相对方案1，将体积和表面积作为数据成员，并提供专门的成员函数求解（推荐用这种方案，每个函数的内聚性增强） 
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Bulk  
+{  
+public:  
+    void get_value();  
+    void display();  
+private:  
+    void get_volume();  //用于内部计算的，作为私有函数有利于信息隐藏  
+    void get_area();  
+    float lengh;  
+    float width;  
+    float height;  
+    float volume;  
+    float area;  
+};  
+  
+void Bulk::get_value()  
+{   
+    cout<<"please input lengh, width,height:";  
+    cin>>lengh;  
+    cin>>width;  
+    cin>>height;  
+    get_volume();  //长宽高获得值以后即可以计算，也可以在display中输出前计算，但综合而言，此处更佳  
+    get_area();  
+}  
+  
+void Bulk::get_volume()  
+{  
+    volume=lengh*width*height;  
+}  
+  
+void Bulk::get_area()  
+{  
+    area=2*(lengh*width+lengh*height+width*height);  
+}  
+  
+void Bulk::display()  
+{   
+    //get_volume()和get_area()也可以在此处调用，本例中计算工作在长宽高确定后立刻进行      
+    cout<<"The volume is: "<<volume<<endl;  
+    cout<<"The surface area is: "<<area<<endl;  
+}  
+  
+int main()  
+{  
+    Bulk b1,b2,b3;  
+      
+    b1.get_value();  
+    cout<<"For bulk1: "<<endl;  
+    b1.display();  
+      
+    b2.get_value();  
+    cout<<"For bulk2: "<<endl;  
+    b2.display();  
+      
+    b3.get_value();  
+    cout<<"For bulk3: "<<endl;  
+    b3.display();  
+    return 0;  
+}  
+
+【解决方案3】相对方案2，将get_volume()和get_area()声明为public型。这时，这两个函数可以在main()函数中用形如b1.get_volume()和b1.get_area()的方式调用，将输入、计算、显示的流程体现在main()函数中。也可以采用如方案2中形式调用，但体现不了public的价值。这种解决方案的程序请读者自行给出。

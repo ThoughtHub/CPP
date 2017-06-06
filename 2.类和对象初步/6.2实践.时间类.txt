@@ -1,0 +1,202 @@
+【项目 - 时间类】阅读、运行程序后，按要求扩充类的功能
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    void set_time( );     
+    void show_time( );    
+private:   
+    bool is_time(int, int, int);   //这个成员函数设置为私有的，是合适的，请品味  
+    int hour;  
+    int minute;  
+    int sec;  
+};  
+void Time::set_time( )   
+{  
+    char c1,c2;  
+    cout<<"请输入时间(格式hh:mm:ss)";  
+    while(1)  
+    {    cin>>hour>>c1>>minute>>c2>>sec;  
+        if(c1!=':'||c2!=':')  
+            cout<<"格式不正确，请重新输入"<<endl;  
+        else if (!is_time(hour,minute,sec))  
+            cout<<"时间非法，请重新输入"<<endl;  
+        else   
+            break;  
+    }  
+}  
+void Time::show_time( )        
+{  
+    cout<<hour<<":"<<minute<<":"<<sec<<endl;  
+}  
+bool Time::is_time(int h,int m, int s)  
+{  
+    if (h<0 ||h>24 || m<0 ||m>60 || s<0 ||s>60)  
+        return false;  
+    return true;  
+}  
+int main( )  
+{  
+    Time t1;    
+    t1.set_time( );     
+    t1.show_time( );  
+    return 0;  
+}  
+
+要求：
+（1）请在原类基础上，在类内增加下列成员函数（将是内置成员函数）
+add_a_sec()  //增加1秒钟
+add_a_minute() //增加1分钟
+add_an_hour() //增加1小时
+　　在main()数中，调用新增加的成员函数，以测试扩充后的功能。
+（2）再增加三个成员函数，要求在类内声明，类外定义。
+add_seconds(int) //增加n秒钟
+add_minutes(int) //增加n分钟
+add_hours(int) //增加n小时
+提示：
+要考虑增加后超出取值范围的情形；
+增加n秒后，秒数可能会超过60，调整秒数，并可以调用增加分钟数的成员函数，使时间合法；同理，增加分钟数也有类似问题。
+［参考解答］
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    void set_time( );  
+    void show_time( );  
+    inline void add_a_sec();  //增加1秒钟  
+    inline void add_a_minute(); //增加1分钟  
+    inline void add_an_hour(); //增加1小时  
+    void add_seconds(int); //增加n秒钟  
+    void add_minutes(int); //增加n分钟  
+    void add_hours(int); //增加n小时  
+private:  
+    bool is_time(int, int, int);  
+    int hour;  
+    int minute;  
+    int sec;  
+};  
+  
+  
+void Time::set_time( )  
+{  
+    char c1,c2;  
+    cout<<"请输入时间(格式hh:mm:ss)";  
+    while(1)  
+    {  
+        cin>>hour>>c1>>minute>>c2>>sec;  
+        if(c1!=':'||c2!=':')  
+            cout<<"格式不正确，请重新输入"<<endl;  
+        else if (!is_time(hour,minute,sec))  
+            cout<<"时间非法，请重新输入"<<endl;  
+        else  
+            break;  
+    }  
+}  
+  
+void Time::show_time( )  
+{  
+    cout<<hour<<":"<<minute<<":"<<sec<<endl;  
+}  
+  
+bool Time::is_time(int h,int m, int s)  
+{  
+    if (h<0 ||h>24 || m<0 ||m>60 || s<0 ||s>60)  
+        return false;  
+    return true;  
+}  
+  
+inline void Time::add_a_sec()  //增加1秒钟  
+{  
+    ++sec;              //直接修改sec的值即可，sec是Time类的数据成员  
+    if (sec>59)          //sec超出规定的范围，因为只是增加1秒，最多也就是向分钟进位1，所以增加1分钟。  
+    {  
+        sec=0;  
+        add_a_minute(); //至于增加1分钟是否会引起小时变化，由add_a_minute()处理  
+    }  
+}  
+  
+inline void Time::add_a_minute() //增加1分钟  
+{  
+    ++minute;  
+    if (minute>59)       //参见add_a_sec()中的注释  
+    {  
+        minute=0;  
+        add_an_hour();  
+    }  
+}  
+  
+inline void Time::add_an_hour() //增加1小时  
+{  
+    ++hour;  
+    if (hour>23)  
+        hour=0;     //到第2天了  
+  
+}  
+void Time::add_seconds(int n) //增加n秒钟  
+{  
+    sec+=n;         //直接加上去。此操作可能使sec超出取值范围，将在下面处理，我们只要保证此函数执行完sec的取值正确即可  
+    if (sec>59)      //思考：if中的两条语句能否交换顺序？为什么不能？后果将是……？  
+    {  
+        add_minutes(sec/60);    //增加sec/60分钟  
+        sec%=60;                //秒数应该是sec%=60  
+    }  
+}  
+  
+void Time::add_minutes(int n) //增加n分钟  
+{  
+    minute+=n;  
+    if (minute>59)       //参见add_seconds()中的注释  
+    {  
+        add_hours(minute/60);  
+        minute%=60;  
+    }  
+}  
+  
+void Time::add_hours(int n) //增加n小时  
+{  
+    hour+=n;  
+    if (hour>23)  
+        hour%=24;       //此程序不涉及日期，如果设计类DateTime，修改将继续下去  
+}  
+  
+int main( )  
+{  
+    Time t1;  
+    Time &t2=t1;  
+    t1.set_time( );  
+    cout<<"现在时间是：";  
+    t2.show_time( );  
+  
+    t1.add_a_sec();  //增加1秒钟  
+    cout<<"增加1秒钟后：";  
+    t1.show_time( );  
+  
+    t1.add_a_minute(); //增加1分钟  
+    cout<<"增加1分钟后：";  
+    t1.show_time( );  
+  
+    t1.add_an_hour(); //增加1小时  
+    cout<<"增加1小时后：";  
+    t1.show_time( );  
+  
+    t1.add_seconds(40); //增加40秒钟  
+    cout<<"增加40秒钟后：";  
+    t1.show_time( );  
+  
+    t1.add_minutes(127); //增加127分钟  
+    cout<<"增加127分钟后：";  
+    t1.show_time( );  
+  
+    t1.add_hours(8); //增加8小时  
+    cout<<"增加8小时后：";  
+    t1.show_time( );  
+    return 0;  
+}  
+【讨论】
+1. 时、分、秒等超出范围后，调用相应的成员函数完成进一步的处理，这个办法要学会，减少了代码量，并且保证了质量。
+2.三个内置函数的另外一种写法是直接将其定义在class的声明中，inline可以省略。
+3.有同学实现add_a_sec()时，直接调用add_seconds(1)完成，这是个很聪明的想法。但在此处反被聪明误的是，add_a_sec()操作简单、可能使用频繁（如在工业控制中），声明为内置函数是有道理的，然而调用非内置函数add_seconds()后，这点优势将不再有。此可谓设计中的“两难”，如何选择，自己回答。

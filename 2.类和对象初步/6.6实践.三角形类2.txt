@@ -1,0 +1,93 @@
+程序功能同项目1，main()函数如下，请重新定义Triangle类，其中逻辑特别简单的set和get成员函数，要处理为内置成员函数，直接在类内定义。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+int main()  
+{  
+    Triangle tri1;  //定义三角形类的一个实例（对象）  
+    double x,y,z;  
+    cout<<"请输入三角形的三边：";  
+    cin>>x>>y>>z;  
+    tri1.setA(x);  
+    tri1.setB(y);  
+    tri1.setC(z);   //为三边置初值  
+    if(tri1.isTriangle())  
+    {  
+        cout<<"三条边为："<<tri1.getA()<<','<<tri1.getB()<<','<<tri1.getC()<<endl;  
+        cout<<"三角形的周长为："<< tri1.perimeter()<<'\t'<<"面积为："<< tri1.area()<<endl;  
+    }  
+    else  
+        cout<<"不能构成三角形"<<endl;  
+    return 0;  
+}  
+[参考解答]
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    void setA(double x)  
+    {  
+        a=x;  
+    };  
+    void setB(double y)  
+    {  
+        b=y;  
+    };  
+    void setC(double z)  
+    {  
+        c=z;  
+    };  
+  
+    double getA()  
+    {  
+        return a;  
+    }  
+    double getB()  
+    {  
+        return b;  
+    }  
+    double getC()  
+    {  
+        return c;  
+    }  
+    bool isTriangle();//判断是否构成三角形  
+    double perimeter(void);//计算三角形的周长  
+    double area(void);//计算并返回三角形的面积  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+int main()  
+{  
+    Triangle tri1;  //定义三角形类的一个实例（对象）  
+    double x,y,z;  
+    cout<<"请输入三角形的三边：";  
+    cin>>x>>y>>z;  
+    tri1.setA(x);  
+    tri1.setB(y);  
+    tri1.setC(z);   //为三边置初值  
+    if(tri1.isTriangle())  
+    {  
+        cout<<"三条边为："<<tri1.getA()<<','<<tri1.getB()<<','<<tri1.getC()<<endl;  
+        cout<<"三角形的周长为："<< tri1.perimeter()<<'\t'<<"面积为："<< tri1.area()<<endl;  
+    }  
+    else  
+        cout<<"不能构成三角形"<<endl;  
+    return 0;  
+}  
+//请在下面定义Triangle类中的各个成员函数  
+bool Triangle::isTriangle()  
+{  
+    return (a+b>c&&a+c>b&&b+c>a);  
+}  
+  
+double Triangle::perimeter()  
+{  
+    return a+b+c;  
+}  
+  
+double Triangle::area()  
+{  
+    double p=(a+b+c)/2;  
+    return sqrt(p*(p-a)*(p-b)*(p-c));  
+}  

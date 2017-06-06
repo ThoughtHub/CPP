@@ -1,0 +1,245 @@
+【项目2 - 对象作为数据成员】
+回想Engineer类的数据成员，有眼镜、背包等。某Engineer的眼镜、背包，是Glass、Bag类的对象。类中的数据成员，其类型可以是简单类型，也可以是类。通过这种方式，将某些类组合到另外的类中，当作其中的一个“部件”使用。
+本项目设计一个三角形类，其数据成员不再是三角形三条边的边长，而是三角形的三个顶点。利用设计的三角形类，输入三角形的三个顶点，求出其面积、周长，并判断其是否为直角三角形和等腰三角形。
+提示：（1）这个问题需要用到两个类，顶点类参照项目1中的CPoint类；（2）三角形类参考下面CTriangle类的声明；（3）充分利用CPoint类中已有的代码实现；（4）关于三条边长的处理，可以增加三个私有属性，在初始化时求出来备用。当然，也可以在需要用到时再计算。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class CTriangle  
+{  
+public:  
+  CTriangle(CPoint &X,CPoint &Y,CPoint &Z):A(X),B(Y),C(Z){} //给出三点的构造函数  
+  void setTriangle(CPoint &X,CPoint &Y,CPoint &Z);//  
+  float perimeter(void);//计算三角形的周长  
+  float area(void);//计算并返回三角形的面积  
+  bool isRightTriangle(); //是否为直角三角形  
+  bool isIsoscelesTriangle(); //是否为等腰三角形  
+private:  
+  CPoint A,B,C; //三顶点  
+};  
+[参考解答]
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <Cmath>  
+using namespace std;  
+  
+class CPoint  
+{  
+private:  
+  double x;  // 横坐标  
+  double y;  // 纵坐标  
+public:  
+  CPoint(double xx=0,double yy=0);  
+  double distance1(CPoint p) const;   // 两点之间的距离  
+  void input();  //以x,y 形式输入坐标点  
+  void output(); //以(x,y) 形式输出坐标点  
+};  
+  
+class CTriangle  
+{  
+public:  
+  CTriangle(CPoint &X,CPoint &Y,CPoint &Z):A(X),B(Y),C(Z){} //给出三点的构造函数  
+  void setTriangle(CPoint &X,CPoint &Y,CPoint &Z);//  
+  double perimeter(void);//计算三角形的周长  
+  double area(void);//计算并返回三角形的面积  
+  bool isRightTriangle(); //是否为直角三角形  
+  bool isIsoscelesTriangle(); //是否为等腰三角形  
+private:  
+  CPoint A,B,C; //三顶点  
+};  
+  
+CPoint::CPoint(double xx,double yy)  
+{  
+  x=xx;  
+  y=yy;  
+}  
+  
+// 输入坐标点  
+void CPoint::input()  
+{  
+  char ch;  
+  cout<<"请输入坐标点(格式x,y )：";  
+  while(1)  
+  {  
+    cin>>x>>ch>>y;  
+    if (ch==',') break;  
+    cout<<"输入的数据格式不符合规范，请重新输入\n";  
+  }  
+}  
+  
+// 输出坐标点  
+void CPoint::output()  
+{  
+  cout<<"("<<x<<", "<<y<<")"<<endl;  
+}  
+  
+// 求两点之间的距离  
+double CPoint::distance1(CPoint p) const  
+{  
+  double d;  
+  d=sqrt((p.x-x)*(p.x-x)+(p.y-y)*(p.y-y));  
+  return d;  
+}  
+  
+void CTriangle::setTriangle(CPoint &X,CPoint &Y,CPoint &Z)  
+{  
+  A=X;  
+  B=Y;  
+  C=Z;  
+}  
+  
+double CTriangle::perimeter(void)  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  return (a + b + c);  
+}  
+  
+double CTriangle::area(void)  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  double s = (a + b + c) / 2;  
+  return sqrt(s * (s - a) * (s - b) * (s - c));  
+}  
+  
+bool CTriangle::isRightTriangle()//是否为直角三角形  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  double max=a;  
+  if(b>max) max=b;  
+  if(c>max) max=c;  
+  if(((max==a)&&(abs(a*a-b*b-c*c)<1e-7))||((max==b)&&(abs(b*b-a*a-c*c)<1e-7))||((max==c)&&(abs(c*c-b*b-a*a)<1e-7)))  
+    return true;  
+  else  
+    return false;  
+}  
+bool CTriangle::isIsoscelesTriangle() //是否为等腰三角形  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  if((abs(a-b)<1e-7)||(abs(b-c)<1e-7)||(abs(c-a)<1e-7))  
+    return true;  
+  else  
+    return false;  
+}  
+  
+int main()  
+{  
+    CPoint X(2,5),Y(5,2),Z(7,8);  
+    CTriangle Tri1(X,Y,Z);  //定义三角形类的一个实例（对象）  
+    cout<<"该三角形的周长为："<<Tri1.perimeter()<<"，面积为："<<Tri1.area()<<endl<<endl;  
+    cout<<"该三角形"<<(Tri1.isRightTriangle()?"是":"不是")<<"直角三角形"<<endl;  
+    cout<<"该三角形"<<(Tri1.isIsoscelesTriangle()?"是":"不是")<<"等腰三角形"<<endl;  
+    return 0;  
+}  
+
+
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <Cmath>  
+using namespace std;  
+  
+class CPoint  
+{  
+private:  
+  double x;  // 横坐标  
+  double y;  // 纵坐标  
+public:  
+  CPoint(double xx=0,double yy=0);  
+  double distance1(CPoint p) const;   // 两点之间的距离  
+  void input();  //以x,y 形式输入坐标点  
+  void output(); //以(x,y) 形式输出坐标点  
+};  
+  
+class CTriangle  
+{  
+public:  
+  CTriangle(CPoint &X,CPoint &Y,CPoint &Z):A(X),B(Y),C(Z){} //给出三点的构造函数  
+  void setTriangle(CPoint &X,CPoint &Y,CPoint &Z);//  
+  double perimeter(void);//计算三角形的周长  
+  double area(void);//计算并返回三角形的面积  
+  bool isRightTriangle(); //是否为直角三角形  
+  bool isIsoscelesTriangle(); //是否为等腰三角形  
+private:  
+  CPoint A,B,C; //三顶点  
+};  
+  
+CPoint::CPoint(double xx,double yy)  
+{  
+  x=xx;  
+  y=yy;  
+}  
+  
+// 输入坐标点  
+void CPoint::input()  
+{  
+  char ch;  
+  cout<<"请输入坐标点(格式x,y )：";  
+  while(1)  
+  {  
+    cin>>x>>ch>>y;  
+    if (ch==',') break;  
+    cout<<"输入的数据格式不符合规范，请重新输入\n";  
+  }  
+}  
+  
+// 输出坐标点  
+void CPoint::output()  
+{  
+  cout<<"("<<x<<", "<<y<<")"<<endl;  
+}  
+  
+// 求两点之间的距离  
+double CPoint::distance1(CPoint p) const  
+{  
+  double d;  
+  d=sqrt((p.x-x)*(p.x-x)+(p.y-y)*(p.y-y));  
+  return d;  
+}  
+  
+void CTriangle::setTriangle(CPoint &X,CPoint &Y,CPoint &Z)  
+{  
+  A=X;  
+  B=Y;  
+  C=Z;  
+}  
+  
+double CTriangle::perimeter(void)  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  return (a + b + c);  
+}  
+  
+double CTriangle::area(void)  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  double s = (a + b + c) / 2;  
+  return sqrt(s * (s - a) * (s - b) * (s - c));  
+}  
+  
+bool CTriangle::isRightTriangle()//是否为直角三角形  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  double max=a;  
+  if(b>max) max=b;  
+  if(c>max) max=c;  
+  if(((max==a)&&(abs(a*a-b*b-c*c)<1e-7))||((max==b)&&(abs(b*b-a*a-c*c)<1e-7))||((max==c)&&(abs(c*c-b*b-a*a)<1e-7)))  
+    return true;  
+  else  
+    return false;  
+}  
+bool CTriangle::isIsoscelesTriangle() //是否为等腰三角形  
+{  
+  double a=B.distance1(C),b=C.distance1(A),c=A.distance1(B);  
+  if((abs(a-b)<1e-7)||(abs(b-c)<1e-7)||(abs(c-a)<1e-7))  
+    return true;  
+  else  
+    return false;  
+}  
+  
+int main()  
+{  
+    CPoint X(2,5),Y(5,2),Z(7,8);  
+    CTriangle Tri1(X,Y,Z);  //定义三角形类的一个实例（对象）  
+    cout<<"该三角形的周长为："<<Tri1.perimeter()<<"，面积为："<<Tri1.area()<<endl<<endl;  
+    cout<<"该三角形"<<(Tri1.isRightTriangle()?"是":"不是")<<"直角三角形"<<endl;  
+    cout<<"该三角形"<<(Tri1.isIsoscelesTriangle()?"是":"不是")<<"等腰三角形"<<endl;  
+    return 0;  
+}  

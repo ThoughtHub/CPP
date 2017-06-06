@@ -1,0 +1,85 @@
+下面设计一个三角形类，请给出各成员函数的定义 
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    void setABC(double x, double y, double z);//置三边的值，注意要能成三角形  
+    void getABC(double *x, double *y, double *z);//取三边的值  
+    double perimeter(void);//计算三角形的周长  
+    double area(void);//计算并返回三角形的面积  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+int main()  
+{  
+    Triangle tri1;  //定义三角形类的一个实例（对象）  
+    tri1.setABC(4,5,6); //为三边置初值  
+    double x,y,z;  
+    tri1.getABC (&x,&y,&z);   //将三边的值为x,y,z赋值  
+    cout<<"三条边为："<<x<<'\t'<<y<<'\t'<<z<<endl;  
+    cout<<"三角形的周长为："<< tri1.perimeter()<<'\t'<<"面积为："<< tri1.area()<<endl;  
+    return 0;  
+}  
+//请在下面定义Triangle类中的各个成员函数  
+[参考解答]
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include<iostream>  
+#include<Cmath>  
+#include<cstdlib>  
+using namespace std;  
+class Triangle  
+{  
+public:  
+    void setABC(double x, double y, double z);//置三边的值，注意要能成三角形  
+    void getABC(double *x, double *y, double *z);//取三边的值  
+    double perimeter(void);//计算三角形的周长  
+    double area(void);//计算并返回三角形的面积  
+private:  
+    double a,b,c; //三边为私有成员数据  
+};  
+int main()  
+{  
+    Triangle tri1;  //定义三角形类的一个实例（对象）  
+    tri1.setABC(4,5,6); //为三边置初值  
+    double x,y,z;  
+    tri1.getABC (&x,&y,&z);   //将三边的值为x,y,z赋值  
+    cout<<"三条边为："<<x<<'\t'<<y<<'\t'<<z<<endl;  
+    cout<<"三角形的周长为："<< tri1.perimeter()<<'\t'<<"面积为："<< tri1.area()<<endl;  
+    return 0;  
+}  
+//请在下面定义Triangle类中的各个成员函数  
+void Triangle::setABC(double x, double y, double z)  
+{  
+    if(x+y>z&&x+z>y&&y+z>x)  
+    {  
+        a=x;  
+        b=y;  
+        c=z;  
+    }  
+    else  
+    {  
+        cout<<"不能构成三角形"<<endl;  
+        exit(0);  
+    }  
+}  
+  
+void Triangle::getABC(double *x, double *y, double *z)  
+{  
+    *x=a;  
+    *y=b;  
+    *z=c;  
+}  
+  
+double Triangle::perimeter(void)  
+{  
+    return a+b+c;  
+}  
+  
+double Triangle::area(void)  
+{  
+    double p=(a+b+c)/2;  
+    return sqrt(p*(p-a)*(p-b)*(p-c));  
+} 

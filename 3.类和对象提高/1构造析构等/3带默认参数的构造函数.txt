@@ -1,0 +1,49 @@
+使用默认参数的构造函数
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    Time( );  
+    Time(int h,int m=0,int s=0);  
+    void show_time( );  
+private:  
+    int hour;  
+    int minute;  
+    int sec;  
+};  
+  
+  
+Time::Time( )  
+{  
+    hour=0;  
+    minute=0;  
+    sec=0;  
+}  
+  
+  
+Time::Time(int h,int m,int s)  
+{  
+    hour=h;  
+    minute=m;  
+    sec=s;  
+}  
+  
+  
+void Time::show_time( )  
+{  
+    cout<<hour<<":"<<minute<<":"<<sec<<endl;  
+}  
+int main( )  
+{  
+    Time t1;  
+    t1.show_time();  
+    Time t2(8);  
+    t2.show_time();  
+    Time t3(8,30);  
+    t3.show_time();  
+    Time t4(18,56,48);  
+    t4.show_time();  
+    return 0;  
+}  

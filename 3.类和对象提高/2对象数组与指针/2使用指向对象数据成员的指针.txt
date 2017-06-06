@@ -1,0 +1,51 @@
+示例：使用指向对象数据成员的指针
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    Time(int,int,int);  
+    void get_time( );  
+private:  
+    int hour,minute,sec;  
+};  
+Time::Time(int h,int m,int s):hour(h),minute(m),sec(s) {}  
+void Time::get_time( )  
+{  
+    cout<<hour<<":"<<minute<<":" <<sec<<endl;  
+}  
+int main( )  
+{  
+    Time t(10,13,56);  
+    int *p1;  
+    p1 = &t.hour;  //这个地方有错  
+    cout<<*p1<<endl;  
+    return 0;  
+}  
+
+示例：使用指向对象成员函数的指针
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    Time(int,int,int);  
+    void get_time( );  
+private:  
+    int hour,minute,sec;  
+};  
+Time::Time(int h,int m,int s):hour(h),minute(m),sec(s) {}  
+void Time::get_time( )  
+{  
+    cout<<hour<<":"<<minute<<":" <<sec<<endl;  
+}  
+int main( )  
+{  
+    Time t(10,13,56);  
+    void (Time::*p)( );  
+    p=&Time::get_time;    //而非p2=&t1.get_time;  
+    (t.*p)( );  
+    return 0;  
+}  

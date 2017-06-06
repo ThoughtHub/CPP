@@ -1,0 +1,106 @@
+用构造函数初始化对象
+#include <iostream>
+using namespace std;
+class Time
+{
+public:
+    Time( )
+    {
+        hour=0;
+        minute=0;
+        sec=0;
+    }
+    void set_time( );
+    void show_time( );
+private:
+    int hour;
+    int minute;
+    int sec;
+};
+void Time::set_time( )
+{
+    cin>>hour;
+    cin>>minute;
+    cin>>sec;
+}
+void Time::show_time( )
+{
+    cout<<hour<<":"<<minute<<":"<<sec<<endl;
+}
+int main( )
+{
+    Time t1;
+    t1.show_time( );
+    Time t2;
+    t1.set_time( );
+    t2.show_time( );
+    return 0;
+}
+
+在类外定义构造函数
+class Time
+{
+public:
+	 Time( );    
+	 void set_time( ); 
+	 void show_time( );  
+  private:
+	 int hour;  
+	 int minute;
+	 int sec;
+};
+Time::Time( )
+{
+  hour=0;                 
+  minute=0;
+  sec=0;
+}
+带参数的构造函数
+class Time
+{
+public:
+    Time();
+    Time(int,int,int);
+    void show_time();  
+private:
+    int hour;  
+    int minute;
+    int sec;
+};
+Time::Time()
+{
+    hour=0;                 
+    minute=0;
+    sec=0;
+}
+
+Time::Time(int h,int m,int s)     
+{ 
+     hour=h;   
+     minute=m;
+     sec=s;
+}
+
+int main()
+{
+    Time t1; //不可t1();         
+    t1.show_time();
+
+
+    Time t2(15,39,59);         
+    t2.show_time();   
+    return 0;
+}
+
+用参数初始化表对数据成员初始化
+方便、简练的写法：用参数初始化表
+class Time
+{
+public:
+   Time( ):hour(0),minute(0),sec(0){};
+   Time(int h,int m,int s):hour(h),minute(m),sec(s) {};
+   ……
+};
+
+也可以在类外用参数初始化表定义构造函数。
+Time::Time(int h,int m,int s):hour(h), minute(m), sec(s){};

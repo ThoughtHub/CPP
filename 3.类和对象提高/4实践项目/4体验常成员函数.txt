@@ -1,0 +1,357 @@
+【项目1-体验常成员函数】
+设计平面坐标点类，计算两点之间距离、到原点距离、关于坐标轴和原点的对称点等。在设计中，由于求距离、求对称点等操作对原对象不能造成任何改变，所以，将这些函数设计为常成员函数是合适的，能够避免数据成员被无意更改。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class CPoint  
+{  
+private:  
+  double x;  // 横坐标  
+  double y;  // 纵坐标  
+public:  
+  CPoint(double xx=0,double yy=0);  
+  double Distance1(CPoint p) const; //两点之间的距离(一点是当前点——想到this了吗?，另一点为p)  
+  double Distance0() const;          // 到原点(0,0)的距离  
+  CPoint SymmetricAxis(char style) const;//style取'x','y'和'o'分别表示按x轴, y轴, 原点对称  
+  void input();  //以x,y 形式输入坐标点  
+  void output(); //以(x,y) 形式输出坐标点  
+};  
+[参考解答]
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include "iostream"  
+#include "Cmath"  
+using namespace std;  
+  
+  
+class CPoint  
+{  
+private:  
+  double x;  // 横坐标  
+  double y;  // 纵坐标  
+public:  
+  CPoint(double xx=0,double yy=0);  
+  double Distance1(CPoint p) const;   // 两点之间的距离  
+  double Distance0() const;          // 到原点的距离  
+  CPoint SymmetricAxis(char style) const;   // 返回对称点  
+  void input();  //以x,y 形式输入坐标点  
+  void output(); //以(x,y) 形式输出坐标点  
+};  
+  
+CPoint::CPoint(double xx,double yy)  
+{  
+  x=xx;  
+  y=yy;  
+}  
+  
+// 输入坐标点  
+void CPoint::input()  
+{  
+  char ch;  
+  cout<<"请输入坐标点(格式x,y )：";  
+  while(1)  
+  {  
+    cin>>x>>ch>>y;  
+    if (ch==',') break;  
+    cout<<"输入的数据格式不符合规范，请重新输入\n";  
+  }  
+}  
+  
+// 输出坐标点  
+void CPoint::output()  
+{  
+  cout<<"("<<x<<", "<<y<<")"<<endl;  
+}  
+  
+// 求两点之间的距离  
+double CPoint::Distance1(CPoint p) const  
+{  
+  double d;  
+  d=sqrt((p.x-x)*(p.x-x)+(p.y-y)*(p.y-y));  
+  return d;  
+}  
+  
+// 求点到原点的距离  
+double CPoint::Distance0() const  
+{  
+  double d;  
+  d=sqrt(x*x+y*y);  
+  return d;  
+}  
+  
+// 求对称点, style取'x','y'和'o'分别表示按x轴, y轴, 原点对称  
+CPoint CPoint::SymmetricAxis(char style) const  
+{  
+  CPoint p(this->x,this->y);//用复制构造函数时，写作p(*this)  
+  switch(style)  
+  {  
+  case 'x':  
+    p.y=-y; break;  
+  case 'y':  
+    p.x=-x; break;  
+  case 'o':  
+    p.x=-x;p.y=-y;  
+  }  
+  return p;  
+}  
+  
+int main( )  
+{  
+  double distance;  
+  CPoint p1,p2,p;  
+  cout<<"第1个点p1，";  
+  p1.input();  
+  cout<<"第2个点p2，";  
+  p2.input();  
+  distance=p1.Distance1(p2);  
+  cout<<"两点的距离为："<<distance<<endl;  
+  distance=p1.Distance0();  
+  cout<<"p1到原点的距离为："<<distance<<endl;  
+  p=p1.SymmetricAxis('x');  
+  cout<<"p1关于x轴的对称点为：";  
+  p.output();  
+  p=p1.SymmetricAxis('y');  
+  cout<<"p1关于y轴的对称点为：";  
+  p.output();  
+  p=p1.SymmetricAxis('o');  
+  cout<<"p1关于原点的对称点为：";  
+  p.output();  
+  return 0;  
+}  
+
+　　对比CPoint::Distance1(CPoint p)函数定义理解下面的内容。
+ 
+【要点理解】
+　　有同学提出能不能在参数中给出两点，求这两点间的距离？当然可以。看下面的例子
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <Cmath>  
+using namespace std;  
+  
+class CPoint  
+{  
+private:  
+    double x;  // 横坐标  
+    double y;  // 纵坐标  
+public:  
+    CPoint(double xx=0,double yy=0):x(xx),y(yy){};  
+    double getX(){return x;}  
+    double getY(){return y;}  
+};  
+  
+double distance1(CPoint p1,CPoint p2)  
+{  
+    double d;  
+    d=sqrt((p1.getX()-p2.getX())*(p1.getX()-p2.getX())+(p1.getY()-p2.getY())*(p1.getY()-p2.getY()));  
+    return d;  
+}  
+  
+  
+void main( )  
+{  
+    double d;  
+    CPoint p1(2,3),p2(-5,1);  
+    d=distance1(p1,p2);  
+    cout<<"两点的距离为："<<d<<endl;  
+    system("pause");  
+}  
+
+【讨论】这里涉及到两种对求距离的处理方法
+　　方法1：用类的成员函数实现
+　　成员函数的定义：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+// 求两点之间的距离  
+double CPoint::Distance1(CPoint p) const  
+{  
+    double d;  
+    d=sqrt((p.x-x)*(p.x-x)+(p.y-y)*(p.y-y));//将(p.x-x)更改为(p.x-this->x)可以更便于理解，d是当前点*this和参数给出的点p间的距离  
+    return d;  
+}  
+　　调用成员函数求距离：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+double d;  
+CPoint p1(2,3),p2(-5,1);  
+d=p1.distance1(p2); //或d=p2.distance(p1);  
+　　方法2：用一般函数实现
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+double distance1(CPoint p1,CPoint p2)//注意：这不是类的成员函数  
+{  
+    double d;  
+    d=sqrt((p1.getX()-p2.getX())*(p1.getX()-p2.getX())+(p1.getY()-p2.getY())*(p1.getY()-p2.getY()));  
+    return d;  
+}  
+　　调用函数求距离：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+double d;  
+CPoint p1(2,3),p2(-5,1);  
+d=distance1(p1,p2);  
+　　（1）在方法1中函数调用d=p1.distance1(p2);是典型的面向对象思维，求距离distance是对象p1的行为，是p1的功能，是p1求对p2的距离，p1是这个动作的发起者，p2为这个动作提供数据；方法2是面向过程的思维，在main()函数中，由main()作主求距离，求的是p1和p2距离，p1和p2地位平等。
+　　（2）在方法1中，p1的数据成员x和y在类的成员函数中可以直接使用，也可以用this->x和this->y访问，这是内部事务；而在方法2中，已经不是类的地盘所在，p1.x、p1.y不能访问对象中的私有成员，需要定义访问私有成员的接口getX()和getY()，才能得到对象中x和y的值，信息隐藏在此发威。
+
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include "iostream"  
+#include "Cmath"  
+using namespace std;  
+  
+  
+class CPoint  
+{  
+private:  
+  double x;  // 横坐标  
+  double y;  // 纵坐标  
+public:  
+  CPoint(double xx=0,double yy=0);  
+  double Distance1(CPoint p) const;   // 两点之间的距离  
+  double Distance0() const;          // 到原点的距离  
+  CPoint SymmetricAxis(char style) const;   // 返回对称点  
+  void input();  //以x,y 形式输入坐标点  
+  void output(); //以(x,y) 形式输出坐标点  
+};  
+  
+CPoint::CPoint(double xx,double yy)  
+{  
+  x=xx;  
+  y=yy;  
+}  
+  
+// 输入坐标点  
+void CPoint::input()  
+{  
+  char ch;  
+  cout<<"请输入坐标点(格式x,y )：";  
+  while(1)  
+  {  
+    cin>>x>>ch>>y;  
+    if (ch==',') break;  
+    cout<<"输入的数据格式不符合规范，请重新输入\n";  
+  }  
+}  
+  
+// 输出坐标点  
+void CPoint::output()  
+{  
+  cout<<"("<<x<<", "<<y<<")"<<endl;  
+}  
+  
+// 求两点之间的距离  
+double CPoint::Distance1(CPoint p) const  
+{  
+  double d;  
+  d=sqrt((p.x-x)*(p.x-x)+(p.y-y)*(p.y-y));  
+  return d;  
+}  
+  
+// 求点到原点的距离  
+double CPoint::Distance0() const  
+{  
+  double d;  
+  d=sqrt(x*x+y*y);  
+  return d;  
+}  
+  
+// 求对称点, style取'x','y'和'o'分别表示按x轴, y轴, 原点对称  
+CPoint CPoint::SymmetricAxis(char style) const  
+{  
+  CPoint p(this->x,this->y);//用复制构造函数时，写作p(*this)  
+  switch(style)  
+  {  
+  case 'x':  
+    p.y=-y; break;  
+  case 'y':  
+    p.x=-x; break;  
+  case 'o':  
+    p.x=-x;p.y=-y;  
+  }  
+  return p;  
+}  
+  
+int main( )  
+{  
+  double distance;  
+  CPoint p1,p2,p;  
+  cout<<"第1个点p1，";  
+  p1.input();  
+  cout<<"第2个点p2，";  
+  p2.input();  
+  distance=p1.Distance1(p2);  
+  cout<<"两点的距离为："<<distance<<endl;  
+  distance=p1.Distance0();  
+  cout<<"p1到原点的距离为："<<distance<<endl;  
+  p=p1.SymmetricAxis('x');  
+  cout<<"p1关于x轴的对称点为：";  
+  p.output();  
+  p=p1.SymmetricAxis('y');  
+  cout<<"p1关于y轴的对称点为：";  
+  p.output();  
+  p=p1.SymmetricAxis('o');  
+  cout<<"p1关于原点的对称点为：";  
+  p.output();  
+  return 0;  
+}  
+
+　　对比CPoint::Distance1(CPoint p)函数定义理解下面的内容。
+ 
+【要点理解】
+　　有同学提出能不能在参数中给出两点，求这两点间的距离？当然可以。看下面的例子
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+#include <Cmath>  
+using namespace std;  
+  
+class CPoint  
+{  
+private:  
+    double x;  // 横坐标  
+    double y;  // 纵坐标  
+public:  
+    CPoint(double xx=0,double yy=0):x(xx),y(yy){};  
+    double getX(){return x;}  
+    double getY(){return y;}  
+};  
+  
+double distance1(CPoint p1,CPoint p2)  
+{  
+    double d;  
+    d=sqrt((p1.getX()-p2.getX())*(p1.getX()-p2.getX())+(p1.getY()-p2.getY())*(p1.getY()-p2.getY()));  
+    return d;  
+}  
+  
+  
+void main( )  
+{  
+    double d;  
+    CPoint p1(2,3),p2(-5,1);  
+    d=distance1(p1,p2);  
+    cout<<"两点的距离为："<<d<<endl;  
+    system("pause");  
+}  
+
+【讨论】这里涉及到两种对求距离的处理方法
+　　方法1：用类的成员函数实现
+　　成员函数的定义：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+// 求两点之间的距离  
+double CPoint::Distance1(CPoint p) const  
+{  
+    double d;  
+    d=sqrt((p.x-x)*(p.x-x)+(p.y-y)*(p.y-y));//将(p.x-x)更改为(p.x-this->x)可以更便于理解，d是当前点*this和参数给出的点p间的距离  
+    return d;  
+}  
+　　调用成员函数求距离：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+double d;  
+CPoint p1(2,3),p2(-5,1);  
+d=p1.distance1(p2); //或d=p2.distance(p1);  
+　　方法2：用一般函数实现
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+double distance1(CPoint p1,CPoint p2)//注意：这不是类的成员函数  
+{  
+    double d;  
+    d=sqrt((p1.getX()-p2.getX())*(p1.getX()-p2.getX())+(p1.getY()-p2.getY())*(p1.getY()-p2.getY()));  
+    return d;  
+}  
+　　调用函数求距离：
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+double d;  
+CPoint p1(2,3),p2(-5,1);  
+d=distance1(p1,p2);  
+　　（1）在方法1中函数调用d=p1.distance1(p2);是典型的面向对象思维，求距离distance是对象p1的行为，是p1的功能，是p1求对p2的距离，p1是这个动作的发起者，p2为这个动作提供数据；方法2是面向过程的思维，在main()函数中，由main()作主求距离，求的是p1和p2距离，p1和p2地位平等。
+　　（2）在方法1中，p1的数据成员x和y在类的成员函数中可以直接使用，也可以用this->x和this->y访问，这是内部事务；而在方法2中，已经不是类的地盘所在，p1.x、p1.y不能访问对象中的私有成员，需要定义访问私有成员的接口getX()和getY()，才能得到对象中x和y的值，信息隐藏在此发威。

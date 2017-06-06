@@ -1,0 +1,74 @@
+#include <iostream>  
+#include <cstring>  
+using namespace std;  
+class Student  
+{  
+public:  
+    void set_data(int n, char *p,char s);  
+    void display( );  
+private:  
+    int num;  
+    char name[20];  
+    char sex;  
+};  
+void Student::set_data(int n, char *p,char s)  
+{  
+    num=n;  
+    strcpy(name,p);  
+    sex=s;  
+}  
+void Student::display( )  
+{  
+    cout<<"num: "<<num<<endl;  
+    cout<<"name: " <<name<<endl;  
+    cout<<"sex: " <<sex<<endl<<endl;  
+}  
+int main()  
+{  
+    Student stud1,stud2;  
+    stud1.set_data(1,"John",'f');  
+    stud2.set_data(2,"Mary",'m');  
+    stud1.display();  
+    stud2.display();  
+    return 0;  
+}
+
+
+
+类的成员函数
+
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    void set_time(int,int,int);  
+    void show_time();  
+private:  
+    int hour;  
+    int minute;  
+    int sec;  
+};  
+int main( )  
+{  
+    Time t1,t2;  
+    t1.set_time(12,45,32);  
+    t2.set_time(21,32,15);  
+    t1.show_time();  
+    t2.show_time( );  
+    return 0;  
+}  
+  
+  
+void Time::set_time(int h,int m,int s)  
+{  
+    hour=h;  
+    minute=m;  
+    sec=s;  
+}  
+void Time::show_time()  
+{  
+    cout<<hour<<":";  
+    cout<<minute<<":";  
+    cout<<sec<<endl;  
+}

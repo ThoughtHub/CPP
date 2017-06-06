@@ -1,0 +1,128 @@
+请写出下面程序的运行结果，再和计算机运行的结果对照。无论对错，再想一想。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class A  
+{  
+    int a , b ;  
+public :  
+    A( )   
+    {  
+        a=b=0;  
+        cout <<"a="<<a<<","<<"b="<<b<<endl;  
+    }  
+    A(int aa, int bb): a(aa),b(bb)  
+    {  
+        cout <<"a="<<a<<","<<"b="<<b<<endl;  
+    }  
+    ~A( )  
+    {  
+        cout<<"Destructor "<<a<<" "<<b<<endl;  
+    }  
+};  
+int main()  
+{  
+    A x, y(2, 3);  
+    return 0;  
+}  
+
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class A  
+{  
+public:  
+    A()  
+    {  
+        cout<<"A";  
+    }  
+    ~A()  
+    {  
+        cout<<"~A";  
+    }  
+};  
+class B  
+{  
+    A *p;  
+public:  
+    B()  
+    {  
+        cout<<"B";  
+        p=new A();  
+    }  
+    ~B()  
+    {  
+        cout<<"~B";  
+        delete p;  
+    }  
+};  
+int main()  
+{  
+    B obj;  
+    return 0;  
+}  
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class toy  
+{  
+public:  
+    toy(int q, int p)  
+    {  
+        quan = q;  
+        price = p;  
+    }  
+    int get_quan()  
+    {  
+        return quan;  
+    }  
+    int get_price()  
+    {  
+        return price;  
+    }  
+private:  
+    int quan, price;  
+};  
+int main()  
+{  
+    toy op[3][2]=  
+    {  
+        toy(10,20),toy(30,48),  
+        toy(50,68),toy(70,80),  
+        toy(90,16),toy(11,120)  
+    };  
+    int i;  
+    for (i=0; i<3; i++)  
+    {  
+        cout<<op[i][0].get_quan()<<",";  
+        cout<<op[i][0].get_price()<<"\n";  
+        cout<<op[i][1].get_quan()<<",";  
+        cout<<op[i][1].get_price()<<"\n";  
+    }  
+    cout<<"\n";  
+    return 0;  
+}  
+
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class DA  
+{  
+    int k;  
+public:  
+    DA(int x=1): k(x) { }  
+    ~DA()  
+    {  
+        cout<<k;  
+    }  
+};  
+int main()  
+{  
+    DA d[]= {DA(3),DA(3),DA(3) };  
+    DA *p=new DA[2];  
+    delete []p;  
+    return 0;  
+}  

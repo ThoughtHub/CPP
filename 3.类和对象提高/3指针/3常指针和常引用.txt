@@ -1,0 +1,329 @@
+创案例讲解——”玻璃罩const”系列的三篇文章：
+1. 使用常对象——为共用数据加装一个名为const的玻璃罩
+2. 常（const）+ 对象 + 指针：玻璃罩到底保护哪一个
+3. 对象更有用的玻璃罩——常引用
+
+　　话题的引入：C++采取了不少有效的措施(如设private保护)以增加数据的安全性，但也可以在不同的场合通过不同的途径访问同一个数据对象。有时在无意之中的误操作会改变有关数据的状况，而这是人们不希望出现的。
+　　例如：
+[cpp] view plain copy print?
+//程序1  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    int x, y;  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy();  
+} ;  
+void Test::printxy()  //用于显示x*y的值  
+{  
+    x=2;  //这是一个bug  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    Test t(3,5);  
+    t.printxy( );  
+    system("pause");  
+}  
+　　这段程序的运行结果为x*y=10。显然不是我们期望的。原因在于，本来printxy()只是用来输出结果，需求当中只是“读取”类中数据成员即可；而现在，其中包含改变数据成员值的语句x=2，现有的程序没有表达出printxy()不能修改x值这一约事，从而程序失去了一种“免疫力”——自动拒绝不应该有的对类中数据成员值的修改。按照相关的机制，尽管x是私有的，但在整个类的内部，默认是任何成员函数都可以访问的。
+　　在这一段短程序中，可能此事一眼可以看出。但需要考虑在一个大工程中，涉及上百个类，几万甚至更多行的代码，由数（十）名程序员合作完成的一个工程中，这个小小的x=2;是会犯下滔天罪行的。强调程序员要仔细、认真是必要的，但质量的保证不应该仅凭程序员在体力、脑力上的投入，应该有种机制预以保证，或者有一定的防范措施，才是最根本的。这同时也可以降低处理这类事情的成本。好比在社会领域，强调人人做个好人是必要的，但铲除各种丑恶现象，制度建设和执行更重要。
+　　C++中给出应对的办法就是，使用const修饰符，声明程序中的某些部件具有“常”的性质：即不允许改变、不可改变、不应该改变等。我愿将之形象地比喻为一个玻璃罩——其中的成员只可读取，不可修改（只可以看，但不能摸，不能动）。
+　　本文从常对象、常数据成员、常成员函数三个角度给出这个问题的解答。系列文章中的其他两篇涉及常指针和常引用。
+
+　　一、常对象——const对象
+　　凡希望保证数据成员不被改变的对象，可以声明为常对象，常对象中的所有成员的值都不能被修改。
+　　常对象两种等价的定义形式：
+　　　　　类名 const 对象名[(实参表列)];
+　　　　　const 类名 对象名[(实参表列)];
+　　在定义常对象时，必须要在初始化时给出初值。此外，对于常对象中数据成员的任何修改都是非法的，编译器将给出编译错误提示。例如：
+[cpp] view plain copy print?
+//程序2  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    int x, y;  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy();  
+} ;  
+void Test::printxy()  //用于显示x*y的值  
+{  
+    x=2;  //这是一个bug  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    const Test t(3,5);//将对象t定义为常对象  
+    t.printxy( );  
+    system("pause");  
+}  
+　　在编译时，第20行会提示错误：error C2662: “Test::printxy”: 不能将“this”指针从“const Test”转换为“Test &”。原因在于printxy()成员函数中要对数据成员进行修改，而当前对象却是一个常对象。
+　　在实际应用中，其值只能在初始化时置，且不能再修改的情况很多。比如有表示时间的类Date，定义一个日期：Date myBirthday(yyyy,mm,dd)表示生日，这个值是在程序中要保证不被修改的。回顾更简单的情况，变量前加const修饰符定义的是常变量，如const double pi=3.14;，一样的道理。
+　　关于这个错误提示作些解释（看这些解释头疼的读者暂时可以略过下一段，但过后要看。目前不能理解的，需要在this指针和const的其他用法上有所积累。另外，下一段也可以作为this指针和const其他用法的案例使用。）
+　　我们知道，每一个成员函数都包含一个特殊的指针——this，其值为当前正在调用成员函数的对象的起始地址，即指向当前对象。printxy()被声明为无参函数，而实际是隐含一个this指针参数的，即
+[cpp] view plain copy print?
+void Test::printxy(Test *this)  
+{  
+    this->x = 2;    
+    cout<<"x*y="<<(this->x)*(this->y)<<endl;  
+}  
+　　这样，在第20行调用t.printxy();时，相当于t.printxy(&t);，即将对象 t 的地址传递给形参this。从实参 &t 应当和形参对应的角度，t 是常对象，printxy()函数的原型应该是：void printxy(const Test *this)，而非void printxy(Test *this)。至于提示中“const Test”转换为“Test &”中的&，等理解了常引用后再作讨论。
+　　面对这个错误提示，我们排除bug，将原程序第14行x=2;删除，这是符合需求的。但是，问题并没有得到解决。编译仍然出错，需要考虑常成员函数了。
+
+　　二、常成员函数——const成员函数
+　　要引用常对象中的数据成员，需将该成员函数声明为const型函数，即常成员函数。常成员函数的原型为：
+　　　　　返回值类型 成员函数名[(形参表列)] const;
+　　对于去除了上面bug的程序：
+[cpp] view plain copy print?
+//程序3  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    int x, y;  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy();  
+} ;  
+void Test::printxy() //功能：输出x*y的值  
+{  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    const Test t(3,5);//将对象t定义为常对象  
+    t.printxy( );  
+    system("pause");  
+}  
+　　其中存在的问题就是，printxy()是“非const成员函数”，而被const对象调用，违反了“常对象只能调用常成员函数”的规则。
+　　程序应该改为：
+[cpp] view plain copy print?
+//程序4  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    int x, y;  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy() const;  
+} ;  
+void Test::printxy() const //用于显示x*y的值  
+{  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    const Test t(3,5);//将对象t定义为常对象  
+    t.printxy( );  
+    system("pause");  
+}  
+　　注意，const是函数类型的一部分，在声明函数和定义函数时都要有const关键字，在调用时不必加const。常对象中的成员函数未加const，编译系统认为其是非const成员函数。常成员函数可以访问常对象中的数据成员，但不允许修改常对象中数据成员的值。
+　　那么，在将一个对象定义为常对象时，是否意味着其所属类中的所有成员函数都应该为const成员函数呢？不是这样的。例如下面的程序，常对象t1只能调用常成员函数；对象t2不是常对象，则可以调用非const函数setX();在其中还可以修改数据成员 x 的值。
+[cpp] view plain copy print?
+//程序5  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    int x;   
+    int y;  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy() const;  
+    void setX(int n) {x=n;}  
+    void setY(int n) {y=n;}  
+} ;  
+void Test::printxy() const //用于显示x*y的值  
+{  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    const Test t1(3,5);//将对象t1定义为常对象  
+    t1.printxy( ); //t1.setX(2);将招致错误  
+    Test t2(4,7);//将对象t定义为非const对象  
+    t2.setX(2);//合法的调用  
+    t2.printxy();  
+    system("pause");  
+}  
+　　这个程序给我们留下的最实用的启示是，如果一个函数，如printxy()，无论何时都不会改变数据成员的值，不管将来是用于const对象，还是非const对象，都将其定义为const成员函数。
+
+　　三、常数据成员——const数据成员
+　　使用常对象是一个非常强的要求，其中的所有数据成员将不能改变。而实际中的需求是这样的：一个对象中，个别数据成员的值经初始化后不允许改变，其他的可以改变。这时，不要将对象设为常对象，而是使用常数据成员——const数据成员。
+　　声明常数据成员也用关键字const，其形式为：
+　　　　const 数据类型 数据成员名;
+　　看下面的例子：
+[cpp] view plain copy print?
+//程序6  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    const int x; //const数据成员  
+    int y;       //非const数据成员  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy() const;  
+    void setX(int n) {x=n;}  
+    void setY(int n) {y=n;}  
+} ;  
+void Test::printxy() const //函数中一定不修改数据成员值，定义为const成员函数  
+{  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    Test t(3,5);  
+    t.setX(2);  
+    t.setY(4);  
+    t.printxy( );   
+    system("pause");  
+}  
+　　程序编译时，出现3个错误。
+　　先说第12行 void setX(int n) {x=n;} 的错误：error C2166: 左值指定 const 对象。显然，赋值表达式 x=n 中的左值 x 已经被声明为const数据成员了，只允许初始化，不允许赋值。这个函数是不允许存在在。
+　　第10行是构造函数Test(int a, int b){x=a;y=b;}，按道理const数据成员可以被初始化，但现在的问题是对const数据成员 x 的初始化的方式不对，与前同样的理由不能用赋值表达式完成（C++中初始化和赋值是有区别的，请自行搜索，这方面的资料很多。）。另外的一个错误提示“error C2758: “Test::x”: 必须在构造函数基/成员初始值设定项列表中初始化”告诉我们如何解决这个问题。构造函数的写法上存在问题。Test(int a, int b):x(a){y=b;}能够保证没有编译错误，而Test(int a, int b):x(a),y(b){}是最佳写法。《Effective C++》书中告诫我们： 尽量使用初始化而不要在构造函数里赋值（条款12）。
+　　所以，程序改为：
+[cpp] view plain copy print?
+//程序7  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    const int x; //const数据成员  
+    int y;       //非const数据成员  
+public:  
+    Test(int a, int b):x(a),y(b){}//Test(int a, int b):x(a){y=b;}也是一个不会发生错误的写法  
+    void printxy() const;  
+    //void setX(int n) {x=n;}  //修改const数据成员是不允许的  
+    void setY(int n) {y=n;}  
+} ;  
+void Test::printxy() const //函数中一定不修改数据成员值，定义为const成员函数  
+{  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    Test t(3,5);  
+    //t.setX(2);  
+    t.setY(4);  
+    t.printxy( );   
+    system("pause");  
+}  
+　　上面的程序中还有一个有趣的话题，printxy()是个const成员函数，它能够访问const数据成员，也能访问非const数据成员。将printxy()声明为非const成员函数，取消了不得修改数据成员的限制，是个更宽松的要求，同样对const数据成员和非const数据成员都能访问，不过若要修改，只能修改y，而不能修改x。
+[cpp] view plain copy print?
+//程序8  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    const int x; //const数据成员  
+    int y;       //非const数据成员  
+public:  
+    Test(int a, int b):x(a),y(b){}  
+    void printxy();  
+    void setY(int n) {y=n;}  
+} ;  
+void Test::printxy()  //改为非const成员函数，仅为演示语法，实际已经背离了需求  
+{  
+    x=5; //这一句的存在引发错误：error C2166: 左值指定 const 对象  
+    y=4;  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    Test t(3,5);  
+    t.setY(4);  
+    t.printxy( );   
+    system("pause");  
+}  
+　　如果所有的数据成员都允许修改，我们将不涉及有些恼人的“常”问题。对于已经讨论的常数据成员的做法，适合于大量数据成员允许修改，而少量不允许修改，这时将少量的定义为const数据成员。
+　　另一方面，如果所有的数据成员都不允许修改，我们在定义对象时将对象定义为常对象处理（本文第一部分）。那么大量数据成员不允许修改，只有少量允许修改时该怎么办呢？总不至于100个不允许修改的数据成员加const，只为满足那1个允许修改成员吧？
+　　在ANSI C++给出了特例：编程时一定要修改常对象中的某个数据成员，该数据成员声明为mutable，如正面的程序： 
+[cpp] view plain copy print?
+//程序9  
+#include <iostream>  
+using namespace std;  
+class  Test  
+{  
+private:   
+    mutable int x; //即使在const对象中，x也是可以修改的  
+    int y;  
+public:  
+    Test(int a, int b){x=a;y=b;}  
+    void printxy() const;  
+} ;  
+void Test::printxy() const //用于显示x*y的值  
+{  
+    x=2; //此处确实可以在const成员函数中修改const对象中声明为mutable的数据成员，  
+    cout<<"x*y="<<x*y<<endl;  
+}  
+void main(void)  
+{      
+    const Test t(3,5);//将对象t定义为常对象  
+    t.printxy( );  
+    system("pause");  
+}  
+
+　　四、总结
+　　不加限制的对象享受着极端的自由，也为bug的滋生提供了土壤。将对象定义为常对象则走入了另一个极端，谁也不许动。于是处在这两个方案中间的做法给我们提供了便利，将不可修改的数据成员声明为const数据成员，从而保证其除了初始化不能被修改；用const成员函数限制函数中不得对数据成员进行修改。再重复一遍：将不可修改的数据成员声明为const数据成员，从而保证其除了初始化不能被修改；用const成员函数限制函数中不得对数据成员进行修改。
+　　不过，这样做也带来了多种组合困扰刚入道的菜鸟，即使老鸟也不能“背会”这些规则。这些内容不是靠背书得到的，一些良好的设计原则会给出指导，彻底理解其实也不难。熟悉了，不过尔尔。
+数据成员	非const成员函数	const成员函数
+非const数据成员	可引用，可改变值	可引用，不可改变值
+const数据成员	可引用，不可改变值	可引用，不可改变值
+const对象的数据成员	不可引用，不可改变	可引用，不可改变值
+　　念熟这张表格还是很有成就感的一件事情。只不过念起来太拗口，我常把“非const”念作“可变的”，倒也减轻了大脑的负担，且不至于引起太大的歧义。另外，我还把“非const成员函数”看成肉食动物，本事大呗，不光看，还要修改；而把“const成员函数”看成食草动物，只图自保，但也要生存，温顺而没有野心。相应的，"非const数据成员”不好消化，"const数据成员"好消化。这样想想，可以增加思维的形象性。
+　　下面，通过表格中给出一些代码，我将给出更直观的对这一干关系的解释，希望帮助读者更容易地掌握相关内容。
+数据成员	非const成员函数	const成员函数
+class{
+private: 
+ int x; //非const数据成员
+ int y;//非const数据成员
+……}	void printxy()
+{cout<<"x*y="<<x*y<<endl;}//可引用;
+void setX(int n) {x=n;}//可改变值
+void setY(int n) {y=n;}//可改变值	void printxy()const
+ { cout<<"x*y="<<x*y<<endl;//可引用
+    x=2;//出错：不可改变值
+}
+class{
+private: 
+ const int x; //const数据成员
+ int y;//非const数据成员
+……}	void printxy()
+{cout<<"x*y="<<x*y<<endl;}//可引用;
+void setX(int n) {x=n;}//错误：不可改变值x
+void setY(int n) {y=n;}//可改变值y	void printxy() const
+{ cout<<"x*y="<<x*y<<endl;//可引用
+  x=2;//错误：不可改变值x
+  y=4;//错误：不可改变值y
+}
+class Test{
+private: 
+ int x; 
+ int y;
+……}
+const Test t(3,5);//t.x,t.y为const对象的数据成员	void Test::printxy()
+{cout<<"x*y="<<x*y<<endl;}
+void Test::setX(int n) {x=n;}
+……
+t.printxy();//不可引用
+t.setX(1);//不可改变	void Test::printxy() const
+{cout<<"x*y="<<x*y<<endl;}
+void Test::setX(int n) const
+  {x=n;} //此处的改变就不合法
+……
+t.printxy();//可引用
+t.setX(1);//不可改变
+

@@ -1,0 +1,68 @@
+一级提示：
+　　先定义类，确定其数据成员和成员函数。在这里要定义的旱冰场类，实际我们只关心其面积和周长，根据面积计算场地内抹水泥的造价，根据周长计算围栏的造价。有了类的定义，在main函数中定义该类对象，调用成员函数即可以完成求解。
+二级提示：
+　　实际上，对于旱冰场，我们只关心它就是一个圆。这就是设计中抓住了本质。于是，设计一个Circle（圆）类，数据成员为圆的半径，Circle类还提供计算圆的面积和边长的成员函数。在main函数中，定义一个Circle类的对象，调用成员函数求出旱冰场的造价。
+三级提示：
+　　请在下面提示的基础上完成程序，其中需要做的工作包括：（1）在类声明中声明相关的公共成员函数；（2）在类声明和main()函数之间，定义声明的成员函数。
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+const int M=20;   //水泥场地每平米造价  
+const int N=35;   //围栏每米造价  
+class Circle  
+{  
+    //下面声明需要的成员函数（从已经提供的main函数中可以找出需要哪些成员函数）  
+  
+  
+private:  
+    double radius;  
+};  
+//下面定义需要的成员函数  
+  
+  
+int main()  
+{  
+    double r;  
+    cout<<"请输入旱冰场的半径: ";  
+    cin>>r;  
+    Circle c;  
+    c.setRadius(r);  
+    cout<<"旱冰场的造价为 "<<M*c.area()+N*c.circumference()<<" 元。"<<endl;  
+    return 0;  
+}  
+［参考解答］
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include  <iostream>  
+using namespace std;  
+const double Pi=3.1415926;  
+const int M=20;   //水泥场地每平米造价  
+const int N=35;   //围栏每米造价  
+class Circle  
+{  
+public:  
+    void setRadius(double r);   //设置半径  
+    double area();              //求圆的面积  
+    double circumference();     //求圆的周长  
+private:  
+    double radius;  
+};  
+void Circle::setRadius(double r)    //设置半径  
+{  
+    radius=r;  
+}  
+double Circle::area()               //求圆的面积  
+{  
+    return Pi * radius * radius;  
+}  
+double Circle::circumference()      //求圆的周长  
+{  
+    return 2*Pi*radius;  
+}  
+int main()  
+{  
+    double r;  
+    cout<<"请输入旱冰场的半径: ";  
+    cin>>r;  
+    Circle c;  
+    c.setRadius(r);  
+    cout<<"旱冰场的造价为 "<<M*c.area()+N*c.circumference()<<" 元。"<<endl;  
+    return 0;  
+}  

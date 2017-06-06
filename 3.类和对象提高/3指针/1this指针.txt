@@ -1,0 +1,73 @@
+内幕: 每个对象有个自己的this指针
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+#include <iostream>  
+using namespace std;  
+class Time  
+{  
+public:  
+    void set_time(int,int,int);  
+    void show_time();  
+private:  
+    int hour;  
+    int minute;  
+    int sec;  
+};  
+int main( )  
+{  
+    Time t1,t2;  
+    t1.set_time(12,45,32);  
+    t2.set_time(21,32,15);  
+    t1.show_time();  
+    t2.show_time( );  
+    return 0;  
+}  
+  
+  
+void Time::set_time(int h,int m,int s)  
+{  
+    hour=h;  
+    minute=m;  
+    sec=s;  
+}  
+void Time::show_time()  
+{  
+    cout<<hour<<":";  
+    cout<<minute<<":";  
+    cout<<sec<<endl;  
+}  
+
+
+分清你我
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class CPoint  
+{  
+private:  
+     double x,y;   
+public:  
+     double Distance(CPoint p);  
+};  
+// 求两点之间的距离  
+double CPoint::Distance(CPoint p)  
+{  
+     double dx, dy;  
+     dx=p.x-x;  
+     dy=p.y-y;  
+    d=sqrt(dx*dx+dy*dy);  
+    return d;  
+}  
+
+[cpp] view plain copy print?在CODE上查看代码片派生到我的代码片
+class CPoint  
+{  
+private:  
+    double x,y;   
+public:  
+    double Distance(CPoint p);  
+    void setxy(double x, double y);    
+};  
+// 求两点之间的距离  
+void CPoint::setxy(double x, double y)  
+{  
+     x = x;   
+     y =y;  
+}  
